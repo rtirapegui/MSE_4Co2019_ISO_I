@@ -33,7 +33,7 @@
 /************
  *	Types	*
  ***********/
-typedef void (*task_type)(void *);
+typedef void *(*task_type)(void *);
 
 /****************
  *	Variables	*
@@ -63,20 +63,24 @@ static void initHardware(void)
 /************************
  *	Public functions	*
  ***********************/
-void Task1(void *arg)
+void * Task1(void *arg)
 {
    while(1)
    {
       __WFI();
    }
+
+   return NULL;
 }
 
-void Task2(void *arg)
+void * Task2(void *arg)
 {
    while(1)
    {
       __WFI();
    }
+
+   return NULL;
 }
 
 void taskReturnHook(void *ret_val)
@@ -122,7 +126,7 @@ void initStack(uint32_t stack[],			/*	Pointer to RAM stack section	*/
                task_type entryPoint,		/*	Pointer to task function		*/
                void *arg)					/*	Pointer to task argument		*/
 {
-   memset(stack, 0, stackSizeBytes);								/*	Set stack section with zeros	*/
+   memset(stack, 0, stackSizeBytes);							/*	Set stack section with zeros	*/
    stack[stackSizeBytes/4 - 1] = 1 << 24;           			/*	xPSR, T = 1  */
    stack[stackSizeBytes/4 - 2] = (uint32_t) entryPoint; 		/*	PC	*/
    stack[stackSizeBytes/4 - 3] = (uint32_t) taskReturnHook;  	/*	LR	*/
