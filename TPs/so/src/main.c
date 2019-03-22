@@ -45,6 +45,11 @@ uint32_t sp1, sp2;
 uint32_t currentTask;
 
 /************************
+ *	External functions	*
+ ***********************/
+void HardFault_Handler(void);
+
+/************************
  *	Private functions	*
  ***********************/
 static void initHardware(void)
@@ -65,22 +70,38 @@ static void initHardware(void)
  ***********************/
 void * Task1(void *arg)
 {
-   while(1)
-   {
-      __WFI();
-   }
+	#define	LED_1_BLINK_PERIOD	0x0F0000
+	uint32_t delay;
 
-   return NULL;
+	while(1)
+	{
+		/* Delay for LED_1_BLINK_PERIOD */
+		for(delay = 0;delay < LED_1_BLINK_PERIOD;delay++)
+			;
+
+		/* Toggle LED 1 */
+		Board_LED_Toggle(LED_1);
+	}
+
+	return NULL;
 }
 
 void * Task2(void *arg)
 {
-   while(1)
-   {
-      __WFI();
-   }
+	#define	LED_2_BLINK_PERIOD	0xFF0000
+	uint32_t delay;
 
-   return NULL;
+	while(1)
+	{
+		/* Delay for LED_2_BLINK_PERIOD */
+		for(delay = 0;delay < LED_2_BLINK_PERIOD;delay++)
+			;
+
+		/* Toggle LED 2 */
+		Board_LED_Toggle(LED_2);
+	}
+
+	return NULL;
 }
 
 void taskReturnHook(void *ret_val)
@@ -113,8 +134,8 @@ uint32_t getNextContext(uint32_t currentSp)
          currentTask = 1;
          break;
       default:
-         //HardFault_Handler();
-    	  break;
+         HardFault_Handler();
+    	 break;
    }
 
    return nextSp;
@@ -149,5 +170,7 @@ int main(void)
 
 	// Stay forever
 	while(1)
-		;
+	{
+		__WFI();
+	}
 }
