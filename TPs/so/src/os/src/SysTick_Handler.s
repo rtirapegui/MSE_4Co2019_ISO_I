@@ -16,7 +16,8 @@
      */
 	.global SysTick_Handler
 
-	.extern getNextContent
+	.extern os_getNextContent
+	.extern os_updateBlockedCounter
 
 	/**
 	 * Indicamos que la siguiente subrutina debe ser ensamblada en modo thumb,
@@ -28,12 +29,13 @@
 SysTick_Handler:
 		push	{r4-r11, lr}
 
-		mrs		r0,msp				/*	r0 = msp				*/
-		bl		getNextContext		/*	getNextContext(msp)		*/
+		bl		os_updateBlockedCounter	/*	Update delay of blocked tasks 	*/
+		mrs		r0,msp					/*	r0 = msp						*/
+		bl		os_getNextContext		/*	getNextContext(msp)				*/
 
-		msr		msp,r0				/*	msp = sp1				*/
+		msr		msp,r0					/*	msp = sp1						*/
 
 		pop		{r4-r11, lr}
 
-		bx 		lr   				/*	return	*/
+		bx 		lr   					/*	return							*/
 
