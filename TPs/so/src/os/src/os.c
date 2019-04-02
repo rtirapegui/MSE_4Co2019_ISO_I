@@ -104,6 +104,26 @@ static void initTaskStack(uint32_t stack[],			/*	Pointer to RAM stack section	*/
 /************************
  *	Kernel functions	*
  ***********************/
+void os_schedule(void)
+{
+	/* Instruction Synchronization Barrier: aseguramos que se
+	 * ejecuten todas las instrucciones en  el pipeline
+	 */
+	__ISB();
+	/* Data Synchronization Barrier: aseguramos que se
+	 * completen todos los accesos a memoria
+	 */
+	__DSB();
+
+	/* activo PendSV para llevar a cabo el cambio de contexto */
+	SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
+}
+
+void SysTick_Handler(void)
+{
+	os_schedule();
+}
+
 void os_updateBlockedCounter(void)
 {
 	/* Update blocked tasks counters */
@@ -175,6 +195,9 @@ void os_start(void)
 	/* Initialize Idle task control data */
 	initTaskStack(g_idleTaskStack, IDLE_TASKS_STACK_SIZE_BYTES, &g_idleTaskSp, idleTask, IDLE_TASK_ARGUMENT);
 
+	/* Configure PendSV interrupt priority */
+	NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
+
 	/* Update system core clock rate */
 	SystemCoreClockUpdate();
 
@@ -222,10 +245,7 @@ void os_delay(uint32_t milliseconds)
 		/* Set task blocked counter */
 		g_controlTaskArr[g_currentTaskIndex].blockedCounter = milliseconds;
 
-		/* Wait until blocked counter equals 0 */
-		while(0 < g_controlTaskArr[g_currentTaskIndex].blockedCounter)
-		{
-			__WFI();
-		}
+		/* Invoke scheduler */
+		os_schedule();
 	}
 }
