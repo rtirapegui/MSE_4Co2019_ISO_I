@@ -1,0 +1,39 @@
+19:20:57 **** Build of configuration Debug for project so ****
+make -r -j4 all 
+Building file: ../src/startup/sysinit.c
+Building file: ../src/os/src/os.c
+Building file: ../src/main.c
+Invoking: MCU C Compiler
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -DDEBUG -D__CODE_RED -DCORE_M4 -D__USE_LPCOPEN -D__LPC43XX__ -D__REDLIB__ -D__MULTICORE_NONE -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_board_nxp_lpcxpresso_4337\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\so\src\os\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/startup/sysinit.d" -MT"src/startup/sysinit.o" -MT"src/startup/sysinit.d" -o "src/startup/sysinit.o" "../src/startup/sysinit.c"
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -DDEBUG -D__CODE_RED -DCORE_M4 -D__USE_LPCOPEN -D__LPC43XX__ -D__REDLIB__ -D__MULTICORE_NONE -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_board_nxp_lpcxpresso_4337\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\so\src\os\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/os/src/os.d" -MT"src/os/src/os.o" -MT"src/os/src/os.d" -o "src/os/src/os.o" "../src/os/src/os.c"
+arm-none-eabi-gcc -DDEBUG -D__CODE_RED -DCORE_M4 -D__USE_LPCOPEN -D__LPC43XX__ -D__REDLIB__ -D__MULTICORE_NONE -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_board_nxp_lpcxpresso_4337\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\so\src\os\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/main.d" -MT"src/main.o" -MT"src/main.d" -o "src/main.o" "../src/main.c"
+Finished building: ../src/main.c
+Finished building: ../src/startup/sysinit.c
+ 
+ 
+Finished building: ../src/os/src/os.c
+ 
+Building target: so.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_board_nxp_lpcxpresso_4337\Debug" -L"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\Debug" -Xlinker -Map="so.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -T "so_Debug.ld" -o "so.axf"  ./src/startup/cr_startup_lpc43xx.o ./src/startup/crp.o ./src/startup/sysinit.o  ./src/os/src/PendSV_Handler.o ./src/os/src/os.o  ./src/main.o   -llpc_board_nxp_lpcxpresso_4337 -llpc_chip_43xx
+Memory region         Used Size  Region Size  %age Used
+      MFlashA512:        7700 B       512 KB      1.47%
+      MFlashB512:          0 GB       512 KB      0.00%
+        RamLoc32:        1348 B        32 KB      4.11%
+        RamLoc40:          0 GB        40 KB      0.00%
+        RamAHB32:          0 GB        32 KB      0.00%
+        RamAHB16:          0 GB        16 KB      0.00%
+    RamAHB_ETB16:          0 GB        16 KB      0.00%
+Finished building target: so.axf
+ 
+make --no-print-directory post-build
+Performing post-build steps
+arm-none-eabi-size "so.axf"; # arm-none-eabi-objcopy -v -O binary "so.axf" "so.bin" ; # checksum -p LPC4337 -d "so.bin";
+   text	   data	    bss	    dec	    hex	filename
+   7660	     40	   1308	   9008	   2330	so.axf
+ 
+
+19:20:59 Build Finished (took 2s.227ms)
+

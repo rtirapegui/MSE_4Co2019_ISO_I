@@ -1,0 +1,263 @@
+19:20:28 **** Build of configuration Debug for project lpc_chip_43xx ****
+make -r all 
+Building file: ../src/adc_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/adc_18xx_43xx.d" -MT"src/adc_18xx_43xx.o" -MT"src/adc_18xx_43xx.d" -o "src/adc_18xx_43xx.o" "../src/adc_18xx_43xx.c"
+Finished building: ../src/adc_18xx_43xx.c
+ 
+Building file: ../src/aes_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/aes_18xx_43xx.d" -MT"src/aes_18xx_43xx.o" -MT"src/aes_18xx_43xx.d" -o "src/aes_18xx_43xx.o" "../src/aes_18xx_43xx.c"
+Finished building: ../src/aes_18xx_43xx.c
+ 
+Building file: ../src/atimer_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/atimer_18xx_43xx.d" -MT"src/atimer_18xx_43xx.o" -MT"src/atimer_18xx_43xx.d" -o "src/atimer_18xx_43xx.o" "../src/atimer_18xx_43xx.c"
+Finished building: ../src/atimer_18xx_43xx.c
+ 
+Building file: ../src/ccan_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/ccan_18xx_43xx.d" -MT"src/ccan_18xx_43xx.o" -MT"src/ccan_18xx_43xx.d" -o "src/ccan_18xx_43xx.o" "../src/ccan_18xx_43xx.c"
+Finished building: ../src/ccan_18xx_43xx.c
+ 
+Building file: ../src/chip_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/chip_18xx_43xx.d" -MT"src/chip_18xx_43xx.o" -MT"src/chip_18xx_43xx.d" -o "src/chip_18xx_43xx.o" "../src/chip_18xx_43xx.c"
+Finished building: ../src/chip_18xx_43xx.c
+ 
+Building file: ../src/clock_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/clock_18xx_43xx.d" -MT"src/clock_18xx_43xx.o" -MT"src/clock_18xx_43xx.d" -o "src/clock_18xx_43xx.o" "../src/clock_18xx_43xx.c"
+Finished building: ../src/clock_18xx_43xx.c
+ 
+Building file: ../src/dac_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/dac_18xx_43xx.d" -MT"src/dac_18xx_43xx.o" -MT"src/dac_18xx_43xx.d" -o "src/dac_18xx_43xx.o" "../src/dac_18xx_43xx.c"
+Finished building: ../src/dac_18xx_43xx.c
+ 
+Building file: ../src/eeprom_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/eeprom_18xx_43xx.d" -MT"src/eeprom_18xx_43xx.o" -MT"src/eeprom_18xx_43xx.d" -o "src/eeprom_18xx_43xx.o" "../src/eeprom_18xx_43xx.c"
+Finished building: ../src/eeprom_18xx_43xx.c
+ 
+Building file: ../src/emc_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/emc_18xx_43xx.d" -MT"src/emc_18xx_43xx.o" -MT"src/emc_18xx_43xx.d" -o "src/emc_18xx_43xx.o" "../src/emc_18xx_43xx.c"
+Finished building: ../src/emc_18xx_43xx.c
+ 
+Building file: ../src/enet_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/enet_18xx_43xx.d" -MT"src/enet_18xx_43xx.o" -MT"src/enet_18xx_43xx.d" -o "src/enet_18xx_43xx.o" "../src/enet_18xx_43xx.c"
+Finished building: ../src/enet_18xx_43xx.c
+ 
+Building file: ../src/evrt_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/evrt_18xx_43xx.d" -MT"src/evrt_18xx_43xx.o" -MT"src/evrt_18xx_43xx.d" -o "src/evrt_18xx_43xx.o" "../src/evrt_18xx_43xx.c"
+Finished building: ../src/evrt_18xx_43xx.c
+ 
+Building file: ../src/fpu_init.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/fpu_init.d" -MT"src/fpu_init.o" -MT"src/fpu_init.d" -o "src/fpu_init.o" "../src/fpu_init.c"
+Finished building: ../src/fpu_init.c
+ 
+Building file: ../src/gpdma_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/gpdma_18xx_43xx.d" -MT"src/gpdma_18xx_43xx.o" -MT"src/gpdma_18xx_43xx.d" -o "src/gpdma_18xx_43xx.o" "../src/gpdma_18xx_43xx.c"
+Finished building: ../src/gpdma_18xx_43xx.c
+ 
+Building file: ../src/gpio_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/gpio_18xx_43xx.d" -MT"src/gpio_18xx_43xx.o" -MT"src/gpio_18xx_43xx.d" -o "src/gpio_18xx_43xx.o" "../src/gpio_18xx_43xx.c"
+Finished building: ../src/gpio_18xx_43xx.c
+ 
+Building file: ../src/gpiogroup_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/gpiogroup_18xx_43xx.d" -MT"src/gpiogroup_18xx_43xx.o" -MT"src/gpiogroup_18xx_43xx.d" -o "src/gpiogroup_18xx_43xx.o" "../src/gpiogroup_18xx_43xx.c"
+Finished building: ../src/gpiogroup_18xx_43xx.c
+ 
+Building file: ../src/hsadc_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/hsadc_18xx_43xx.d" -MT"src/hsadc_18xx_43xx.o" -MT"src/hsadc_18xx_43xx.d" -o "src/hsadc_18xx_43xx.o" "../src/hsadc_18xx_43xx.c"
+Finished building: ../src/hsadc_18xx_43xx.c
+ 
+Building file: ../src/i2c_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/i2c_18xx_43xx.d" -MT"src/i2c_18xx_43xx.o" -MT"src/i2c_18xx_43xx.d" -o "src/i2c_18xx_43xx.o" "../src/i2c_18xx_43xx.c"
+Finished building: ../src/i2c_18xx_43xx.c
+ 
+Building file: ../src/i2cm_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/i2cm_18xx_43xx.d" -MT"src/i2cm_18xx_43xx.o" -MT"src/i2cm_18xx_43xx.d" -o "src/i2cm_18xx_43xx.o" "../src/i2cm_18xx_43xx.c"
+Finished building: ../src/i2cm_18xx_43xx.c
+ 
+Building file: ../src/i2s_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/i2s_18xx_43xx.d" -MT"src/i2s_18xx_43xx.o" -MT"src/i2s_18xx_43xx.d" -o "src/i2s_18xx_43xx.o" "../src/i2s_18xx_43xx.c"
+Finished building: ../src/i2s_18xx_43xx.c
+ 
+Building file: ../src/iap_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/iap_18xx_43xx.d" -MT"src/iap_18xx_43xx.o" -MT"src/iap_18xx_43xx.d" -o "src/iap_18xx_43xx.o" "../src/iap_18xx_43xx.c"
+Finished building: ../src/iap_18xx_43xx.c
+ 
+Building file: ../src/lcd_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/lcd_18xx_43xx.d" -MT"src/lcd_18xx_43xx.o" -MT"src/lcd_18xx_43xx.d" -o "src/lcd_18xx_43xx.o" "../src/lcd_18xx_43xx.c"
+Finished building: ../src/lcd_18xx_43xx.c
+ 
+Building file: ../src/otp_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/otp_18xx_43xx.d" -MT"src/otp_18xx_43xx.o" -MT"src/otp_18xx_43xx.d" -o "src/otp_18xx_43xx.o" "../src/otp_18xx_43xx.c"
+Finished building: ../src/otp_18xx_43xx.c
+ 
+Building file: ../src/pinint_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/pinint_18xx_43xx.d" -MT"src/pinint_18xx_43xx.o" -MT"src/pinint_18xx_43xx.d" -o "src/pinint_18xx_43xx.o" "../src/pinint_18xx_43xx.c"
+Finished building: ../src/pinint_18xx_43xx.c
+ 
+Building file: ../src/pmc_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/pmc_18xx_43xx.d" -MT"src/pmc_18xx_43xx.o" -MT"src/pmc_18xx_43xx.d" -o "src/pmc_18xx_43xx.o" "../src/pmc_18xx_43xx.c"
+Finished building: ../src/pmc_18xx_43xx.c
+ 
+Building file: ../src/ring_buffer.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/ring_buffer.d" -MT"src/ring_buffer.o" -MT"src/ring_buffer.d" -o "src/ring_buffer.o" "../src/ring_buffer.c"
+Finished building: ../src/ring_buffer.c
+ 
+Building file: ../src/ritimer_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/ritimer_18xx_43xx.d" -MT"src/ritimer_18xx_43xx.o" -MT"src/ritimer_18xx_43xx.d" -o "src/ritimer_18xx_43xx.o" "../src/ritimer_18xx_43xx.c"
+Finished building: ../src/ritimer_18xx_43xx.c
+ 
+Building file: ../src/rtc_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/rtc_18xx_43xx.d" -MT"src/rtc_18xx_43xx.o" -MT"src/rtc_18xx_43xx.d" -o "src/rtc_18xx_43xx.o" "../src/rtc_18xx_43xx.c"
+Finished building: ../src/rtc_18xx_43xx.c
+ 
+Building file: ../src/sct_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/sct_18xx_43xx.d" -MT"src/sct_18xx_43xx.o" -MT"src/sct_18xx_43xx.d" -o "src/sct_18xx_43xx.o" "../src/sct_18xx_43xx.c"
+Finished building: ../src/sct_18xx_43xx.c
+ 
+Building file: ../src/sct_pwm_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/sct_pwm_18xx_43xx.d" -MT"src/sct_pwm_18xx_43xx.o" -MT"src/sct_pwm_18xx_43xx.d" -o "src/sct_pwm_18xx_43xx.o" "../src/sct_pwm_18xx_43xx.c"
+Finished building: ../src/sct_pwm_18xx_43xx.c
+ 
+Building file: ../src/sdif_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/sdif_18xx_43xx.d" -MT"src/sdif_18xx_43xx.o" -MT"src/sdif_18xx_43xx.d" -o "src/sdif_18xx_43xx.o" "../src/sdif_18xx_43xx.c"
+Finished building: ../src/sdif_18xx_43xx.c
+ 
+Building file: ../src/sdio_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/sdio_18xx_43xx.d" -MT"src/sdio_18xx_43xx.o" -MT"src/sdio_18xx_43xx.d" -o "src/sdio_18xx_43xx.o" "../src/sdio_18xx_43xx.c"
+Finished building: ../src/sdio_18xx_43xx.c
+ 
+Building file: ../src/sdmmc_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/sdmmc_18xx_43xx.d" -MT"src/sdmmc_18xx_43xx.o" -MT"src/sdmmc_18xx_43xx.d" -o "src/sdmmc_18xx_43xx.o" "../src/sdmmc_18xx_43xx.c"
+Finished building: ../src/sdmmc_18xx_43xx.c
+ 
+Building file: ../src/spi_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/spi_18xx_43xx.d" -MT"src/spi_18xx_43xx.o" -MT"src/spi_18xx_43xx.d" -o "src/spi_18xx_43xx.o" "../src/spi_18xx_43xx.c"
+../src/spi_18xx_43xx.c: In function 'Chip_SPI_Int_FlushData':
+../src/spi_18xx_43xx.c:138:20: warning: variable 'tmp' set but not used [-Wunused-but-set-variable]
+  volatile uint32_t tmp;
+                    ^~~
+Finished building: ../src/spi_18xx_43xx.c
+ 
+Building file: ../src/ssp_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/ssp_18xx_43xx.d" -MT"src/ssp_18xx_43xx.o" -MT"src/ssp_18xx_43xx.d" -o "src/ssp_18xx_43xx.o" "../src/ssp_18xx_43xx.c"
+Finished building: ../src/ssp_18xx_43xx.c
+ 
+Building file: ../src/stopwatch_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/stopwatch_18xx_43xx.d" -MT"src/stopwatch_18xx_43xx.o" -MT"src/stopwatch_18xx_43xx.d" -o "src/stopwatch_18xx_43xx.o" "../src/stopwatch_18xx_43xx.c"
+Finished building: ../src/stopwatch_18xx_43xx.c
+ 
+Building file: ../src/sysinit_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/sysinit_18xx_43xx.d" -MT"src/sysinit_18xx_43xx.o" -MT"src/sysinit_18xx_43xx.d" -o "src/sysinit_18xx_43xx.o" "../src/sysinit_18xx_43xx.c"
+Finished building: ../src/sysinit_18xx_43xx.c
+ 
+Building file: ../src/timer_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/timer_18xx_43xx.d" -MT"src/timer_18xx_43xx.o" -MT"src/timer_18xx_43xx.d" -o "src/timer_18xx_43xx.o" "../src/timer_18xx_43xx.c"
+Finished building: ../src/timer_18xx_43xx.c
+ 
+Building file: ../src/uart_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/uart_18xx_43xx.d" -MT"src/uart_18xx_43xx.o" -MT"src/uart_18xx_43xx.d" -o "src/uart_18xx_43xx.o" "../src/uart_18xx_43xx.c"
+../src/uart_18xx_43xx.c: In function 'Chip_UART_Init':
+../src/uart_18xx_43xx.c:98:23: warning: variable 'tmp' set but not used [-Wunused-but-set-variable]
+     volatile uint32_t tmp;
+                       ^~~
+Finished building: ../src/uart_18xx_43xx.c
+ 
+Building file: ../src/wwdt_18xx_43xx.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"src/wwdt_18xx_43xx.d" -MT"src/wwdt_18xx_43xx.o" -MT"src/wwdt_18xx_43xx.d" -o "src/wwdt_18xx_43xx.o" "../src/wwdt_18xx_43xx.c"
+Finished building: ../src/wwdt_18xx_43xx.c
+ 
+Building file: ../inc/fpu_init.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DDEBUG -D__CODE_RED -D__USE_LPCOPEN -DCORE_M4 -I"D:\TFSProjects\MSE\Bimestre 1\Implementacion de sistemas operativos\rtirapegui\MSE_4Co2019_ISO_I\lpc_chip_43xx\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fsingle-precision-constant -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mthumb -specs=redlib.specs -MMD -MP -MF"inc/fpu_init.d" -MT"inc/fpu_init.o" -MT"inc/fpu_init.d" -o "inc/fpu_init.o" "../inc/fpu_init.c"
+Finished building: ../inc/fpu_init.c
+ 
+Building target: liblpc_chip_43xx.a
+Invoking: MCU Archiver
+arm-none-eabi-ar -r  "liblpc_chip_43xx.a"  ./src/adc_18xx_43xx.o ./src/aes_18xx_43xx.o ./src/atimer_18xx_43xx.o ./src/ccan_18xx_43xx.o ./src/chip_18xx_43xx.o ./src/clock_18xx_43xx.o ./src/dac_18xx_43xx.o ./src/eeprom_18xx_43xx.o ./src/emc_18xx_43xx.o ./src/enet_18xx_43xx.o ./src/evrt_18xx_43xx.o ./src/fpu_init.o ./src/gpdma_18xx_43xx.o ./src/gpio_18xx_43xx.o ./src/gpiogroup_18xx_43xx.o ./src/hsadc_18xx_43xx.o ./src/i2c_18xx_43xx.o ./src/i2cm_18xx_43xx.o ./src/i2s_18xx_43xx.o ./src/iap_18xx_43xx.o ./src/lcd_18xx_43xx.o ./src/otp_18xx_43xx.o ./src/pinint_18xx_43xx.o ./src/pmc_18xx_43xx.o ./src/ring_buffer.o ./src/ritimer_18xx_43xx.o ./src/rtc_18xx_43xx.o ./src/sct_18xx_43xx.o ./src/sct_pwm_18xx_43xx.o ./src/sdif_18xx_43xx.o ./src/sdio_18xx_43xx.o ./src/sdmmc_18xx_43xx.o ./src/spi_18xx_43xx.o ./src/ssp_18xx_43xx.o ./src/stopwatch_18xx_43xx.o ./src/sysinit_18xx_43xx.o ./src/timer_18xx_43xx.o ./src/uart_18xx_43xx.o ./src/wwdt_18xx_43xx.o  ./inc/fpu_init.o   
+Finished building target: liblpc_chip_43xx.a
+ 
+make --no-print-directory post-build
+Performing post-build steps
+arm-none-eabi-size "liblpc_chip_43xx.a" ; # arm-none-eabi-objdump -h -S "liblpc_chip_43xx.a" >"liblpc_chip_43xx.lss"
+   text	   data	    bss	    dec	    hex	filename
+   1100	      0	      0	   1100	    44c	adc_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    656	      0	     56	    712	    2c8	aes_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    144	      0	      0	    144	     90	atimer_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   2070	      0	      0	   2070	    816	ccan_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    266	      0	      0	    266	    10a	chip_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   4308	      0	      8	   4316	   10dc	clock_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    160	      0	      0	    160	     a0	dac_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    368	      0	      0	    368	    170	eeprom_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   1474	      0	      0	   1474	    5c2	emc_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    836	      0	      4	    840	    348	enet_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    440	      0	      0	    440	    1b8	evrt_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    116	      0	      0	    116	     74	fpu_init.o (ex liblpc_chip_43xx.a)
+   2686	    120	      8	   2814	    afe	gpdma_18xx_43xx.o (ex liblpc_chip_43xx.a)
+     40	      0	      0	     40	     28	gpio_18xx_43xx.o (ex liblpc_chip_43xx.a)
+      0	      0	      0	      0	      0	gpiogroup_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    812	      0	      0	    812	    32c	hsadc_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   3658	     56	     80	   3794	    ed2	i2c_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   1398	      0	      0	   1398	    576	i2cm_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   1338	      0	      0	   1338	    53a	i2s_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    732	      0	      0	    732	    2dc	iap_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    944	      1	      0	    945	    3b1	lcd_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    464	      0	     40	    504	    1f8	otp_18xx_43xx.o (ex liblpc_chip_43xx.a)
+      0	      0	      0	      0	      0	pinint_18xx_43xx.o (ex liblpc_chip_43xx.a)
+     60	      0	      0	     60	     3c	pmc_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    968	      0	      0	    968	    3c8	ring_buffer.o (ex liblpc_chip_43xx.a)
+    250	      0	      0	    250	     fa	ritimer_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   1008	      0	      0	   1008	    3f0	rtc_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    192	      0	      0	    192	     c0	sct_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    438	      0	      0	    438	    1b6	sct_pwm_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    702	      0	      0	    702	    2be	sdif_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   2642	      4	    320	   2966	    b96	sdio_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   3094	      0	      4	   3098	    c1a	sdmmc_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   1054	      0	      0	   1054	    41e	spi_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   2320	      0	      0	   2320	    910	ssp_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    388	      0	     12	    400	    190	stopwatch_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    616	      0	      0	    616	    268	sysinit_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    314	      0	      0	    314	    13a	timer_18xx_43xx.o (ex liblpc_chip_43xx.a)
+   2166	      0	      1	   2167	    877	uart_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    134	      0	      0	    134	     86	wwdt_18xx_43xx.o (ex liblpc_chip_43xx.a)
+    116	      0	      0	    116	     74	fpu_init.o (ex liblpc_chip_43xx.a)
+ 
+
+19:20:54 Build Finished (took 26s.236ms)
+

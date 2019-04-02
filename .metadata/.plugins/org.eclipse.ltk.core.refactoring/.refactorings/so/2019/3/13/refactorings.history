@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;so/src/os/src/SysTick_Handler.s&apos; to &apos;PendSV_Handler.s&apos;" description="Rename resource &apos;SysTick_Handler.s&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/os/src/SysTick_Handler.s" name="PendSV_Handler.s" stamp="1553731214553" updateReferences="true"/>
+</session>
