@@ -17,7 +17,6 @@
 	.global PendSV_Handler
 
 	.extern os_getNextContent
-	.extern os_updateBlockedCounter
 
 	/**
 	 * Indicamos que la siguiente subrutina debe ser ensamblada en modo thumb,
@@ -27,15 +26,19 @@
 	.thumb_func
 
 PendSV_Handler:
+
+		cpsid   i				// Disable interrupts
+
 		push	{r4-r11, lr}
 
-		bl		os_updateBlockedCounter	/*	Update delay of blocked tasks 	*/
 		mrs		r0,msp					/*	r0 = msp						*/
 		bl		os_getNextContext		/*	getNextContext(msp)				*/
 
 		msr		msp,r0					/*	msp = sp1						*/
 
 		pop		{r4-r11, lr}
+
+		cpsie   i				// Enable interrupts
 
 		bx 		lr   					/*	return							*/
 

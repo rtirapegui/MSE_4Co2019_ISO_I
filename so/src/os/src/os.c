@@ -16,8 +16,8 @@
  *	Constants	*
  * *************/
 #define EXC_RETURN						0xFFFFFFF9					/* Exception return direction */
-#define INVALID_TASK_INDEX				(1 + OS_USER_TASKS_COUNT)	/* Invalid task index as total tasks count */
-#define IDLE_TASK_INDEX					0							/* Idle task is set as 0 index task */
+#define OS_TASKS_COUNT				    (1 + OS_USER_TASKS_COUNT)	/* Invalid task index as total tasks count */
+#define IDLE_TASK_INDEX					0							/* Idle task is set as 0 index task. Do not change */
 #define IDLE_TASKS_STACK_SIZE_BYTES		256							/* Idle task size in bytes */
 #define IDLE_TASK_ARGUMENT				0x00000000					/* Idle task received argument */
 
@@ -33,19 +33,21 @@ typedef enum
 } taskState_t;
 
 /* Internal control struct for os tasks */
-typedef struct
+typedef struct taskControl_t
 {
-	uint32_t *	sp;
-	taskState_t	state;
-	uint32_t	blockedCounter;
+	/* Internal data */
+	struct taskControl_t *next;
+
+	/* Task data */
+	uint32_t *		sp;
+	taskState_t		state;
+	taskPriority_t	priority;
+	uint32_t		blockedCounter;
 } taskControl_t;
 
 /****************
  *	Variables	*
  ***************/
-/* Current task index */
-static uint32_t g_currentTaskIndex = INVALID_TASK_INDEX;
-
 /* Stack of idle task */
 static uint32_t g_idleTaskStack[IDLE_TASKS_STACK_SIZE_BYTES/4];
 
@@ -55,8 +57,11 @@ static uint32_t g_idleTaskSp;
 /* Tasks control array. Is idle task + user defined tasks */
 static taskControl_t g_controlTaskArr[1 + OS_USER_TASKS_COUNT] =
 		{
-			{&g_idleTaskSp, TASK_STATE_READY, 0 }
+			{NULL, &g_idleTaskSp, TASK_STATE_READY, TASK_PRIORITY_IDLE, 0 }
 		};
+
+/* Scheduler execution task list */
+static taskControl_t *g_scheduleList;
 
 /***********************
  *	External functions	*
@@ -66,6 +71,25 @@ extern void SysTick_Handler(void);
 /************************
  *	Private functions	*
  ***********************/
+static void updateBlockedCounter(void)
+{
+	/* Update blocked tasks counters */
+	for(uint32_t i = 0;i < OS_TASKS_COUNT;i++)
+	{
+		if(TASK_STATE_BLOCKED == g_controlTaskArr[i].state)
+		{
+			if(g_controlTaskArr[i].blockedCounter)
+			{
+				--g_controlTaskArr[i].blockedCounter;
+
+				/* If blocked task counter equals 0, set task state to READY */
+				if(0 == g_controlTaskArr[i].blockedCounter)
+					g_controlTaskArr[i].state = TASK_STATE_READY;
+			}
+		}
+	}
+}
+
 static void returnHookTask(void *ret_val)
 {
    while(1)
@@ -118,68 +142,159 @@ void os_schedule(void)
 }
 void SysTick_Handler(void)
 {
+	updateBlockedCounter();
 	os_schedule();
-}
-void os_updateBlockedCounter(void)
-{
-	/* Update blocked tasks counters */
-	for(uint32_t i = 0;i < INVALID_TASK_INDEX;i++)
-	{
-		if(TASK_STATE_BLOCKED == g_controlTaskArr[i].state)
-		{
-			if(g_controlTaskArr[i].blockedCounter)
-			{
-				--g_controlTaskArr[i].blockedCounter;
-
-				/* If blocked task counter equals 0, set task state to READY */
-				if(0 == g_controlTaskArr[i].blockedCounter)
-					g_controlTaskArr[i].state = TASK_STATE_READY;
-			}
-		}
-	}
 }
 uint32_t os_getNextContext(uint32_t currentSp)
 {
-   uint32_t nextSp;
+	/* Check scheduler list status */
+	if(NULL == g_scheduleList)
+	{
+	   /* Initialize scheduler list */
+	   for(uint32_t taskIndex = 0;(taskIndex + 1) < OS_TASKS_COUNT;taskIndex++)
+	   {
+		   g_controlTaskArr[taskIndex].next = &g_controlTaskArr[taskIndex + 1];
+	   }
 
-   if(INVALID_TASK_INDEX == g_currentTaskIndex)
-   {
-	   /* Set currentTaskIndex as IDLE_TASK_INDEX */
-	   g_currentTaskIndex = IDLE_TASK_INDEX;
-
-	   /* Set Idle task state as RUNNING */
-	   g_controlTaskArr[IDLE_TASK_INDEX].state = TASK_STATE_RUNNING;
-
-	   /* Set Idle task as current task */
-	   nextSp = *g_controlTaskArr[IDLE_TASK_INDEX].sp;
-   }
-   else if(INVALID_TASK_INDEX > g_currentTaskIndex)
-   {
-	   uint32_t loopCnt = (1 + OS_USER_TASKS_COUNT);
-
+	   /* Set head list to IDLE task */
+	   g_scheduleList = &g_controlTaskArr[IDLE_TASK_INDEX];
+	}
+	else
+	{
 	   /* Save current task context */
-	   *g_controlTaskArr[g_currentTaskIndex].sp = currentSp;
+	   *g_scheduleList->sp = currentSp;
 
 	   /* If running, set current task state as READY */
-	   if(TASK_STATE_RUNNING == g_controlTaskArr[g_currentTaskIndex].state)
-		   g_controlTaskArr[g_currentTaskIndex].state = TASK_STATE_READY;
+	   if(TASK_STATE_RUNNING == g_scheduleList->state)
+		   g_scheduleList->state = TASK_STATE_READY;
+	}
 
-	   /* Find next READY_STATE task */
-	   while(loopCnt && --loopCnt)
-	   {
-		   /* Increment current task index */
-		   g_currentTaskIndex = (g_currentTaskIndex + 1)%INVALID_TASK_INDEX;
+	#define ORDER_NEXT_BEFORE_CURRENT_TASK	0
+	#define ORDER_NEXT_AFTER_CURRENT_TASK	1
 
-		   /* Find next ready task */
-		   if(TASK_STATE_READY == g_controlTaskArr[g_currentTaskIndex].state)
-		   {
-			   nextSp = *g_controlTaskArr[g_currentTaskIndex].sp;
-			   break;
-		   }
-	   }
-   }
+	/*****************************************************************
+	 * Next task to be executed is always the first element pointed by
+	 * g_scheduleList (head of list).
+	 *
+	 * Schedule List is reordered as follows:
+	 *
+	 * - Set a pointer to current and next task and decide if is needed
+	 * to invert their order or just leave them the way they are by
+	 * analyzing:
+	 *
+	 * - Tasks states
+	 * - Tasks priorities
+	 * - Tasks blocking counter
+	 *
+	 * Using a schedule list reduce OS footprint
+	 *****************************************************************/
 
-   return nextSp;
+	uint32_t loopCnt = 0;
+	bool keepLooping = false;
+
+	do
+	{
+		taskControl_t *nextSchTask = NULL;
+		taskControl_t *prevSchTask = NULL;
+
+		/* Reorder scheduler list */
+		for(taskControl_t *currSchTask = g_scheduleList;currSchTask;)
+		{
+			/* Set pointer to next element in list */
+			nextSchTask = currSchTask->next;
+
+			/* If there's no next element, break */
+			if(NULL == nextSchTask)
+				break;
+
+			/*******************************************************************
+			 * Decide if current and next task order should be switched or not *
+			 ******************************************************************/
+
+			/* By default leave list as it's ordered now */
+			uint8_t schTaskOrder = ORDER_NEXT_AFTER_CURRENT_TASK;
+
+			/* Evaluate states */
+			if(currSchTask->state != nextSchTask->state)
+			{	// States are different
+
+				/* If next element state is READY, switch elements position */
+				if(TASK_STATE_READY == nextSchTask->state)
+					schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
+			}
+			else
+			{	// States are equal
+				if(TASK_STATE_READY == currSchTask->state)
+				{	// States are both READY
+
+					/* Evaluate priority */
+					// Switch elements position if either:
+					// * next element priority is higher
+					// * priorities are the same and is the first loop (Round robin style)
+					if( (currSchTask->priority < nextSchTask->priority) ||
+						((currSchTask->priority == nextSchTask->priority) && (0 == loopCnt)) )
+					{
+						schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
+					}
+				}
+				else if(TASK_STATE_BLOCKED == currSchTask->state)
+				{	// States are both BLOCKED
+
+					/* Evaluate blockedCounter */
+					if(currSchTask->blockedCounter != nextSchTask->blockedCounter)
+					{	// Block counters differ
+
+						/* If next element counter is smaller than current element, switch elements position */
+						if(currSchTask->blockedCounter > nextSchTask->blockedCounter)
+							schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
+					}
+					else
+					{	// Block counters are equal
+
+						/* Evaluate priority */
+						// Switch elements position if either:
+						// * next element priority is higher
+						// * priorities are the same and is the first loop (Round robin style)
+						if( (currSchTask->priority < nextSchTask->priority) ||
+						   ((currSchTask->priority == nextSchTask->priority) && (0 == loopCnt)) )
+						{
+						   schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
+						}
+					}
+				}
+			}
+
+			/* Reorder tasks elements */
+			if(ORDER_NEXT_BEFORE_CURRENT_TASK == schTaskOrder)
+			{
+				currSchTask->next = nextSchTask->next;
+				nextSchTask->next = currSchTask;
+
+				if(NULL != prevSchTask)
+				{
+					prevSchTask->next = nextSchTask;
+				}
+				else
+				{
+					g_scheduleList = nextSchTask;
+				}
+
+				prevSchTask = nextSchTask;
+
+				/* Tasks order was switched, so keepLooping */
+				keepLooping = true;
+			}
+			else
+			{
+				prevSchTask = currSchTask;
+				currSchTask = currSchTask->next;
+			}
+		}
+
+		/* If list order was not altered, keepLooping == false */
+	} while(keepLooping && (++loopCnt < (OS_TASKS_COUNT - 1)));
+
+	return *g_scheduleList->sp;
 }
 
 /************************
@@ -189,6 +304,9 @@ void os_start(void)
 {
 	/* Initialize Idle task control data */
 	initTaskStack(g_idleTaskStack, IDLE_TASKS_STACK_SIZE_BYTES, &g_idleTaskSp, idleTask, IDLE_TASK_ARGUMENT);
+
+	/* Initialize execution tasks list */
+	g_scheduleList = NULL;
 
 	/* Configure PendSV interrupt priority */
 	NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
@@ -208,7 +326,8 @@ void os_initTaskStack(uint32_t stack[],			/*	Pointer to RAM stack section	*/
                	   	  uint32_t stackSizeBytes,	/*	RAM stack section size			*/
 					  uint32_t *sp,				/*	Stack pointer					*/
 					  task_t entryPoint,		/*	Pointer to task function		*/
-					  void *arg)				/*	Pointer to task argument		*/
+					  void *arg,				/*	Pointer to task argument		*/
+					  taskPriority_t priority)	/*  Task priority 					*/
 {
    static uint32_t userTaskIndex = 0;
 
@@ -225,18 +344,21 @@ void os_initTaskStack(uint32_t stack[],			/*	Pointer to RAM stack section	*/
 
 	   /* Set user task state as OS_TASK_STATE_READY */
 	   g_controlTaskArr[userTaskIndex].state = TASK_STATE_READY;
+
+	   /* */
+	   g_controlTaskArr[userTaskIndex].priority = priority;
    }
 }
 void os_delay(uint32_t milliseconds)
 {
 	/* Validate current task is a valid task */
-	if((0 != milliseconds) && (INVALID_TASK_INDEX > g_currentTaskIndex))
+	if((0 != milliseconds) && (NULL != g_scheduleList))
 	{
 		/* Set task state as blocked */
-		g_controlTaskArr[g_currentTaskIndex].state = TASK_STATE_BLOCKED;
+		g_scheduleList->state = TASK_STATE_BLOCKED;
 
 		/* Set task blocked counter */
-		g_controlTaskArr[g_currentTaskIndex].blockedCounter = milliseconds;
+		g_scheduleList->blockedCounter = milliseconds;
 
 		/* Invoke scheduler */
 		os_schedule();

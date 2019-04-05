@@ -12,6 +12,6 @@
 #define _CONF_OS_H_
 
 /* Define below the number of tasks supported by the OS */
-#define OS_USER_TASKS_COUNT		2
+#define OS_USER_TASKS_COUNT		8
 
 #endif	/*	#ifndef _CONF_OS_H_ */
