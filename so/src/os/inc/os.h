@@ -15,8 +15,6 @@
 
 /*==================[inclusions]=============================================*/
 
-/*==================[macros]=================================================*/
-
 /*==================[typedef]================================================*/
 typedef void *(*task_t)(void *);
 
@@ -29,11 +27,33 @@ typedef enum
 ,	TASK_PRIORITY_HIGH
 } taskPriority_t;
 
+typedef struct
+{
+	uint32_t * 	   stack;
+	uint32_t   	   stackSizeBytes;
+	task_t 	   	   entryPoint;
+	void *	   	   arg;
+	taskPriority_t priority;
+} taskDefinition_t;
+
+/*==================[macros]=================================================*/
+#define OS_TASK_CREATE(name, stackSize, entry, argument, prio)				 \
+		static void * entry(void *arg);										 \
+		static uint32_t stackThread_##name[stackSize/4];					 \
+		const taskDefinition_t name = {	.stackSizeBytes = stackSize, 		 \
+										.entryPoint = entry,		 		 \
+										.arg = argument,			 		 \
+										.priority = prio,			 		 \
+										.stack = stackThread_##name	 		 \
+									  };
+
+#define OS_TASKS_DECLARE(...)												 \
+		static const taskDefinition_t * const g_userTaskArr[] = {__VA_ARGS__};
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 void os_start(void);
-void os_initTaskStack(uint32_t stack[], uint32_t stackSizeBytes, uint32_t *sp, task_t entryPoint, void *arg, taskPriority_t priority);
 void os_delay(uint32_t milliseconds);
 
 /*==================[end of file]============================================*/
