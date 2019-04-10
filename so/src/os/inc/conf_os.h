@@ -13,6 +13,9 @@
 
 #include "os.h"
 
+/* OS tick rate */
+#define OS_TICK_PERIOD_MS		1
+
 /* Declare below user tasks using OS_TASKS_DECLARE macro */
 
 // @todo.rtirapegui.8.4.2019	Buscar la manera de generar los externs desde dentro de OS_TASKS_DECLARE

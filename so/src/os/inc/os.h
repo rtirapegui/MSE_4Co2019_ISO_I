@@ -16,9 +16,13 @@
 /*==================[inclusions]=============================================*/
 
 /*==================[typedef]================================================*/
+/* Tasks prototype */
 typedef void *(*task_t)(void *);
 
-/* Tasks priority list */
+/* Tick type. Should be unsigned! */
+typedef uint32_t tick_t;
+
+/* Tasks priority type */
 typedef enum
 {
 	TASK_PRIORITY_IDLE
@@ -27,6 +31,7 @@ typedef enum
 ,	TASK_PRIORITY_HIGH
 } taskPriority_t;
 
+/* Tasks definition type */
 typedef struct
 {
 	uint32_t * 	   stack;
@@ -54,7 +59,9 @@ typedef struct
 
 /*==================[external functions declaration]=========================*/
 void os_start(void);
-void os_delay(uint32_t milliseconds);
+void os_delay(const tick_t ticksToDelay);
+void os_delayUntil(tick_t *const previousWakeTime, const tick_t timeIncrement);
+tick_t os_getTickCount(void);
 
 /*==================[end of file]============================================*/
 

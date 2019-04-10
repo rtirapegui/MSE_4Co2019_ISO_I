@@ -8,6 +8,7 @@
 ===============================================================================
 */
 #include <string.h>
+#include <limits.h>
 #include "conf_os.h"
 #include "board.h"
 
@@ -46,7 +47,7 @@ typedef struct taskControl_t
 	uint32_t 		sp;
 	taskState_t		state;
 	taskPriority_t	priority;
-	uint32_t		blockedCounter;
+	uint32_t		blockedTicks;
 } taskControl_t;
 
 /****************
@@ -68,27 +69,25 @@ static taskControl_t g_controlTaskArr[1 + OS_USER_TASKS_COUNT] =
 /* Scheduler execution task list */
 static taskControl_t *g_scheduleList;
 
-/***********************
- *	External functions	*
- ***********************/
-extern void SysTick_Handler(void);
+/* OS Tick counter */
+static tick_t volatile g_tickCount;
 
 /************************
  *	Private functions	*
  ***********************/
-static void updateBlockedCounter(void)
+static void updateTasksBlockedCounter(void)
 {
 	/* Update blocked tasks counters */
 	for(uint32_t i = 0;i < OS_TASKS_COUNT;i++)
 	{
 		if(TASK_STATE_BLOCKED == g_controlTaskArr[i].state)
 		{
-			if(g_controlTaskArr[i].blockedCounter)
+			if(g_controlTaskArr[i].blockedTicks)
 			{
-				--g_controlTaskArr[i].blockedCounter;
+				--g_controlTaskArr[i].blockedTicks;
 
 				/* If blocked task counter equals 0, set task state to READY */
-				if(0 == g_controlTaskArr[i].blockedCounter)
+				if(0 == g_controlTaskArr[i].blockedTicks)
 					g_controlTaskArr[i].state = TASK_STATE_READY;
 			}
 		}
@@ -146,8 +145,14 @@ static void schedule(void)
  ***********************/
 void SysTick_Handler(void)
 {
-	updateBlockedCounter();
+	/* Update Tasks blocked counter */
+	updateTasksBlockedCounter();
+
+	/* Schedule context switch */
 	schedule();
+
+	/* Increment OS tick counter */
+	g_tickCount++;
 }
 uint32_t os_getNextContext(uint32_t currentSp)
 {
@@ -250,11 +255,11 @@ uint32_t os_getNextContext(uint32_t currentSp)
 				{	// States are both BLOCKED
 
 					/* Evaluate blockedCounter */
-					if(currSchTask->blockedCounter != nextSchTask->blockedCounter)
+					if(currSchTask->blockedTicks != nextSchTask->blockedTicks)
 					{	// Block counters differ
 
 						/* If next element counter is smaller than current element, switch elements position */
-						if(currSchTask->blockedCounter > nextSchTask->blockedCounter)
+						if(currSchTask->blockedTicks > nextSchTask->blockedTicks)
 							schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
 					}
 					else
@@ -351,26 +356,92 @@ void os_start(void)
 	/* Update system core clock rate */
 	SystemCoreClockUpdate();
 
-	/* Initializes the System Timer and its interrupt, and starts the System Tick Timer */
-	SysTick_Config(SystemCoreClock / 1000);
+	/* Initializes the System Timer and its interrupt and
+	 * starts the System Tick Timer at user rate in milliseconds */
+	SysTick_Config((SystemCoreClock / 1000)*OS_TICK_PERIOD_MS);
 
 	while(1)
 	{
 		__WFI();
 	}
 }
-void os_delay(uint32_t milliseconds)
+void os_delay(const tick_t ticksToDelay)
 {
-	/* Validate current task is a valid task */
-	if((0 != milliseconds) && (NULL != g_scheduleList))
+	/* Validate ticksToDelay and current task */
+	if((0 != ticksToDelay) && (NULL != g_scheduleList))
 	{
+		/* Set task blocked counter */
+		g_scheduleList->blockedTicks = ticksToDelay;
+
 		/* Set task state as blocked */
 		g_scheduleList->state = TASK_STATE_BLOCKED;
-
-		/* Set task blocked counter */
-		g_scheduleList->blockedCounter = milliseconds;
 
 		/* Invoke scheduler */
 		schedule();
 	}
+}
+void os_delayUntil(tick_t *const previousWakeTick, const tick_t tickIncrement)
+{
+	/* Validate previousWakeTick and tickIncrement */
+	if((NULL != previousWakeTick) && (0 != tickIncrement))
+	{
+		bool shouldDelay = false;
+
+		/* Get current OS tick count */
+		const tick_t currTickCount = g_tickCount;
+
+		/* Calculate tick to wake */
+		tick_t tickToWake = *previousWakeTick + tickIncrement;
+
+		if(currTickCount < *previousWakeTick)
+		{
+			/* The tick count has overflowed since this function was
+			 * lasted called.  In this case the only time we should ever
+			 * actually delay is if the wake time has also	overflowed,
+			 * and the wake time is greater than the tick time.  When this
+			 * is the case it is as if neither time had overflowed. */
+			if((tickToWake < *previousWakeTick) && (tickToWake > currTickCount))
+			{
+				shouldDelay = true;
+			}
+		}
+		else
+		{
+			/* The tick time has not overflowed.  In this case we will
+			 * delay if either the wake time has overflowed, and/or the
+			 * tick time is less than the wake time. */
+			if((tickToWake < *previousWakeTick) || (tickToWake > currTickCount))
+			{
+				shouldDelay = true;
+			}
+		}
+
+		/* Update the wake tick ready for the next call. */
+		*previousWakeTick = tickToWake;
+
+		if(true == shouldDelay)
+		{
+			tick_t ticksToDelay = ( tickToWake > currTickCount ? tickToWake - currTickCount
+															   : tickToWake - currTickCount + ((tick_t)(~0)) );
+
+			/* Set task blocked counter */
+			g_scheduleList->blockedTicks = ticksToDelay;
+
+			/* Set task state as blocked */
+			g_scheduleList->state = TASK_STATE_BLOCKED;
+
+			/* Invoke scheduler */
+			schedule();
+		}
+	}
+}
+tick_t os_getTickCount(void)
+{
+	tick_t ticks;
+
+	__asm volatile 	( " cpsid i " );	// Disable interrupts
+	ticks = g_tickCount;
+	__asm volatile 	( " cpsie i " );	// Enable interrupts
+
+	return ticks;
 }
