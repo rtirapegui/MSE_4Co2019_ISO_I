@@ -59,9 +59,10 @@ typedef struct
 
 /*==================[external functions declaration]=========================*/
 void os_start(void);
-void os_delay(const tick_t ticksToDelay);
-void os_delayUntil(tick_t *const previousWakeTime, const tick_t timeIncrement);
+void os_taskDelay(const tick_t ticksToDelay);
+void os_taskDelayUntil(tick_t *const previousWakeTime, const tick_t timeIncrement);
 tick_t os_getTickCount(void);
+void os_taskYield(void);
 
 /*==================[end of file]============================================*/
 

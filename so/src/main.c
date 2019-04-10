@@ -46,7 +46,7 @@ static void * Task1(void *arg)
 {
    while(1)
    {
-	   os_delay(15);
+	   os_taskDelay(15);
       //__WFI();
    }
 
@@ -56,7 +56,7 @@ static void * Task2(void *arg)
 {
    while(1)
    {
-	   //os_delay(15);
+	   //os_taskDelay(15);
       //__WFI();
    }
 
@@ -66,7 +66,7 @@ static void * Task3(void *arg)
 {
    while(1)
    {
-	   os_delay(15);
+	   os_taskDelay(15);
       //__WFI();
    }
 
@@ -76,7 +76,7 @@ static void * Task4(void *arg)
 {
    while(1)
    {
-	   //os_delay(15);
+	   //os_taskDelay(15);
       //__WFI();
    }
 
@@ -86,7 +86,7 @@ static void * Task5(void *arg)
 {
    while(1)
    {
-	   //os_delay(15);
+	   //os_taskDelay(15);
       //__WFI();
    }
 
@@ -96,7 +96,7 @@ static void * Task6(void *arg)
 {
    while(1)
    {
-	   os_delay(15);
+	   os_taskDelay(15);
       //__WFI();
    }
 
@@ -106,7 +106,7 @@ static void * Task7(void *arg)
 {
    while(1)
    {
-	   //os_delay(15);
+	   //os_taskDelay(15);
       //__WFI();
    }
 
@@ -116,7 +116,7 @@ static void * Task8(void *arg)
 {
    while(1)
    {
-	   os_delay(15);
+	   os_taskDelay(15);
       //__WFI();
    }
 

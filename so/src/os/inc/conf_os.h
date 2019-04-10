@@ -13,6 +13,9 @@
 
 #include "os.h"
 
+/* OS tick hook usage */
+#define OS_USE_TICK_HOOK		0
+
 /* OS tick rate */
 #define OS_TICK_PERIOD_MS		1
 

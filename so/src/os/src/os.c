@@ -75,24 +75,12 @@ static tick_t volatile g_tickCount;
 /************************
  *	Private functions	*
  ***********************/
-static void updateTasksBlockedCounter(void)
-{
-	/* Update blocked tasks counters */
-	for(uint32_t i = 0;i < OS_TASKS_COUNT;i++)
-	{
-		if(TASK_STATE_BLOCKED == g_controlTaskArr[i].state)
-		{
-			if(g_controlTaskArr[i].blockedTicks)
-			{
-				--g_controlTaskArr[i].blockedTicks;
-
-				/* If blocked task counter equals 0, set task state to READY */
-				if(0 == g_controlTaskArr[i].blockedTicks)
-					g_controlTaskArr[i].state = TASK_STATE_READY;
-			}
-		}
-	}
-}
+#if (OS_USE_TICK_HOOK == 1)
+    __attribute__ ((weak)) void os_tickHook(void)
+    {
+        /* DO NOTHING */
+    }
+#endif
 static void returnHookTask(void *ret_val)
 {
    while(1)
@@ -124,6 +112,24 @@ static void initTaskStack(uint32_t stack[],			/*	Pointer to RAM stack section	*/
 
 	*sp = (uint32_t) &(stack[stackSizeBytes/4 - 17]);    		/* Consider the other 8 registers	*/
 }
+static void updateTasksBlockedCounter(void)
+{
+	/* Update blocked tasks counters */
+	for(uint32_t i = 0;i < OS_TASKS_COUNT;i++)
+	{
+		if(TASK_STATE_BLOCKED == g_controlTaskArr[i].state)
+		{
+			if(g_controlTaskArr[i].blockedTicks)
+			{
+				--g_controlTaskArr[i].blockedTicks;
+
+				/* If blocked task counter equals 0, set task state to READY */
+				if(0 == g_controlTaskArr[i].blockedTicks)
+					g_controlTaskArr[i].state = TASK_STATE_READY;
+			}
+		}
+	}
+}
 static void schedule(void)
 {
 	/* Instruction Synchronization Barrier: make sure every
@@ -153,6 +159,13 @@ void SysTick_Handler(void)
 
 	/* Increment OS tick counter */
 	g_tickCount++;
+
+#if (OS_USE_TICK_HOOK == 1)
+
+	/* Invoke tick hook */
+	os_tickHook();
+#endif
+
 }
 uint32_t os_getNextContext(uint32_t currentSp)
 {
@@ -365,7 +378,7 @@ void os_start(void)
 		__WFI();
 	}
 }
-void os_delay(const tick_t ticksToDelay)
+void os_taskDelay(const tick_t ticksToDelay)
 {
 	/* Validate ticksToDelay and current task */
 	if((0 != ticksToDelay) && (NULL != g_scheduleList))
@@ -380,10 +393,10 @@ void os_delay(const tick_t ticksToDelay)
 		schedule();
 	}
 }
-void os_delayUntil(tick_t *const previousWakeTick, const tick_t tickIncrement)
+void os_taskDelayUntil(tick_t *const previousWakeTick, const tick_t tickIncrement)
 {
-	/* Validate previousWakeTick and tickIncrement */
-	if((NULL != previousWakeTick) && (0 != tickIncrement))
+	/* Validate previousWakeTick, tickIncrement and current task */
+	if((NULL != previousWakeTick) && (0 != tickIncrement) && (NULL != g_scheduleList))
 	{
 		bool shouldDelay = false;
 
@@ -444,4 +457,13 @@ tick_t os_getTickCount(void)
 	__asm volatile 	( " cpsie i " );	// Enable interrupts
 
 	return ticks;
+}
+void os_taskYield(void)
+{
+	/* Validate current task */
+	if(NULL != g_scheduleList)
+	{
+		/* Invoke scheduler */
+		schedule();
+	}
 }
