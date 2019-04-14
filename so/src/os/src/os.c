@@ -19,7 +19,7 @@
  * *************/
 #define EXC_RETURN						0xFFFFFFF9					/* Exception return direction */
 #define OS_TASKS_COUNT				    (1 + OS_USER_TASKS_COUNT)	/* Invalid task index as total tasks count */
-#define IDLE_TASK_INDEX					0							/* Idle task is set as 0 index task. Do not change */
+#define IDLE_TASK_INDEX					0							/* Idle task is set as 0 index task. Do not change! */
 #define IDLE_TASKS_STACK_SIZE_BYTES		256							/* Idle task size in bytes */
 #define IDLE_TASK_ARGUMENT				0x00000000					/* Idle task received argument */
 
@@ -67,10 +67,28 @@ static taskControl_t g_controlTaskArr[1 + OS_USER_TASKS_COUNT] =
 		};
 
 /* Scheduler execution task list */
-static taskControl_t *g_scheduleList;
+static taskControl_t * volatile g_scheduleList;
 
 /* OS Tick counter */
 static tick_t volatile g_tickCount;
+
+/* OS enabled/disabled preemption flag */
+static bool volatile g_preemptDisabledFlag;
+
+/****************
+ *	  Macros	*
+ ***************/
+#define OS_PREEMPT_DISABLE()				\
+	do										\
+	{ 										\
+		g_preemptDisabledFlag = true;		\
+	} while(0);
+
+#define OS_PREEMPT_ENABLE()					\
+	do										\
+	{ 										\
+		g_preemptDisabledFlag = false;		\
+	} while(0);
 
 /************************
  *	Private functions	*
@@ -169,6 +187,10 @@ void SysTick_Handler(void)
 }
 uint32_t os_getNextContext(uint32_t currentSp)
 {
+	/* Check if preemption is disabled and return current SP in such case */
+	if(true == g_preemptDisabledFlag)
+		return currentSp;
+
 	/* Check scheduler list status */
 	if(NULL == g_scheduleList)
 	{
@@ -340,23 +362,25 @@ void os_start(void)
 				  IDLE_TASK_ARGUMENT);
 
 	/* Initialize user tasks control data */
-	for(uint32_t taskIndex = 0;taskIndex < OS_USER_TASKS_COUNT;taskIndex++)
+	for(uint32_t userTaskIndex = 0;userTaskIndex < OS_USER_TASKS_COUNT;userTaskIndex++)
 	{
+		uint32_t controlTaskIndex = (1 + userTaskIndex);
+
 		/* Initialize user task stack */
-		initTaskStack(g_userTaskArr[taskIndex]->stack,
-					  g_userTaskArr[taskIndex]->stackSizeBytes,
-					  &g_controlTaskArr[taskIndex].sp,
-					  g_userTaskArr[taskIndex]->entryPoint,
-					  g_userTaskArr[taskIndex]->arg);
+		initTaskStack(g_userTaskArr[userTaskIndex]->stack,
+					  g_userTaskArr[userTaskIndex]->stackSizeBytes,
+					  &g_controlTaskArr[controlTaskIndex].sp,
+					  g_userTaskArr[userTaskIndex]->entryPoint,
+					  g_userTaskArr[userTaskIndex]->arg);
 
 		 /* Set user task state as OS_TASK_STATE_READY */
-		 g_controlTaskArr[taskIndex].state = TASK_STATE_READY;
+		 g_controlTaskArr[controlTaskIndex].state = TASK_STATE_READY;
 
 		 /* Set task priority */
-		 g_controlTaskArr[taskIndex].priority = g_userTaskArr[taskIndex]->priority;
+		 g_controlTaskArr[controlTaskIndex].priority = g_userTaskArr[userTaskIndex]->priority;
 
 	#if DEBUG
-		g_controlTaskArr[taskIndex].taskIndex = taskIndex;
+		g_controlTaskArr[controlTaskIndex].taskIndex = controlTaskIndex;
 	#endif
 	}
 
@@ -383,11 +407,15 @@ void os_taskDelay(const tick_t ticksToDelay)
 	/* Validate ticksToDelay and current task */
 	if((0 != ticksToDelay) && (NULL != g_scheduleList))
 	{
-		/* Set task blocked counter */
-		g_scheduleList->blockedTicks = ticksToDelay;
+		OS_PREEMPT_DISABLE()	/* Disable preemption */
+		{
+			/* Set task blocked counter */
+			g_scheduleList->blockedTicks = ticksToDelay;
 
-		/* Set task state as blocked */
-		g_scheduleList->state = TASK_STATE_BLOCKED;
+			/* Set task state as blocked */
+			g_scheduleList->state = TASK_STATE_BLOCKED;
+		}
+		OS_PREEMPT_ENABLE()		/* Enable preemption */
 
 		/* Invoke scheduler */
 		schedule();
@@ -434,14 +462,18 @@ void os_taskDelayUntil(tick_t *const previousWakeTick, const tick_t tickIncremen
 
 		if(true == shouldDelay)
 		{
-			tick_t ticksToDelay = ( tickToWake > currTickCount ? tickToWake - currTickCount
-															   : tickToWake - currTickCount + ((tick_t)(~0)) );
+			OS_PREEMPT_DISABLE()	/* Disable preemption */
+			{
+				tick_t ticksToDelay = ( tickToWake > currTickCount ? tickToWake - currTickCount
+																   : tickToWake - currTickCount + ((tick_t)(~0)) );
 
-			/* Set task blocked counter */
-			g_scheduleList->blockedTicks = ticksToDelay;
+				/* Set task blocked counter */
+				g_scheduleList->blockedTicks = ticksToDelay;
 
-			/* Set task state as blocked */
-			g_scheduleList->state = TASK_STATE_BLOCKED;
+				/* Set task state as blocked */
+				g_scheduleList->state = TASK_STATE_BLOCKED;
+			}
+			OS_PREEMPT_ENABLE()		/* Enable preemption */
 
 			/* Invoke scheduler */
 			schedule();
@@ -452,9 +484,11 @@ tick_t os_getTickCount(void)
 {
 	tick_t ticks;
 
-	__asm volatile 	( " cpsid i " );	// Disable interrupts
-	ticks = g_tickCount;
-	__asm volatile 	( " cpsie i " );	// Enable interrupts
+	OS_PREEMPT_DISABLE()	/* Disable preemption */
+	{
+		ticks = g_tickCount;
+	}
+	OS_PREEMPT_ENABLE()		/* Enable preemption */
 
 	return ticks;
 }

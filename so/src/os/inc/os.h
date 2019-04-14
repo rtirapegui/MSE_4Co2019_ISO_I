@@ -44,13 +44,13 @@ typedef struct
 /*==================[macros]=================================================*/
 #define OS_TASK_CREATE(name, stackSize, entry, argument, prio)				 \
 		static void * entry(void *arg);										 \
-		static uint32_t stackThread_##name[stackSize/4];					 \
+		static uint32_t name##_taskStack[stackSize/4];					 	 \
 		const taskDefinition_t name = {	.stackSizeBytes = stackSize, 		 \
 										.entryPoint = entry,		 		 \
 										.arg = argument,			 		 \
 										.priority = prio,			 		 \
-										.stack = stackThread_##name	 		 \
-									  };
+										.stack = name##_taskStack	 		 \
+													  };
 
 #define OS_TASKS_DECLARE(...)												 \
 		static const taskDefinition_t * const g_userTaskArr[] = {__VA_ARGS__};

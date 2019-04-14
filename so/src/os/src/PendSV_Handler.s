@@ -27,7 +27,11 @@
 
 PendSV_Handler:
 
-		cpsid   i				// Disable interrupts
+		cpsid   i						/* Disable interrupts				*/
+
+		tst 	lr,0x10
+		it		eq
+		vpusheq	{s16-s31}
 
 		push	{r4-r11, lr}
 
@@ -38,7 +42,11 @@ PendSV_Handler:
 
 		pop		{r4-r11, lr}
 
-		cpsie   i				// Enable interrupts
+		tst 	lr,0x10
+		it 		eq
+		vpopeq	{s16-s31}
+
+		cpsie   i						/* Enable interrupts				*/
 
 		bx 		lr   					/*	return							*/
 
