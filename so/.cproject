@@ -47,6 +47,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_43xx/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_chip_43xx/inc/usbd}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/so/src/bsp/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/so/src/bsp/inc/config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/so/src/os/inc/config}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gcc.fpu.1234012581" name="Floating point" superClass="com.crt.advproject.gcc.fpu" value="com.crt.advproject.gcc.fpu.fpv4" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.input.1294738704" superClass="com.crt.advproject.compiler.input"/>

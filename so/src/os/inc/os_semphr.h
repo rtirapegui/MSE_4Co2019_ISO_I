@@ -31,9 +31,9 @@ typedef struct
 #define OS_SEMPHR_CREATE(name)											\
 		semphr_t name##_semphr = {										\
 									.value = 0,							\
-									.tasksArr = OS_SEMPHR_INVALID_TASK	\
+									.task = OS_SEMPHR_INVALID_TASK		\
 								 };										\
-		semphr_t * name = name##_semphr;
+		semphr_t * name = &name##_semphr;
 
 /*==================[external data declaration]==============================*/
 
