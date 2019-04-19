@@ -1,6 +1,6 @@
 /*
 ===============================================================================
- Name        : conf_os.h
+ Name        : portmacro.h
  Author      : $(Rodrigo Tirapegui)
  Version     :
  Copyright   : $(copyright)
@@ -8,13 +8,11 @@
 ===============================================================================
 */
 
-#ifndef _CONF_OS_H_
-#define _CONF_OS_H_
+#ifndef _PORTMACRO_H_
+#define _PORTMACRO_H_
 
-/* OS tick hook usage */
-#define OS_USE_TICK_HOOK		1
+/* Tick type. Should be unsigned! */
+typedef uint32_t tick_t;
+#define OS_TICK_MAX	0xffffffffUL
 
-/* OS tick rate */
-#define OS_TICK_PERIOD_MS		1
-
-#endif	/*	#ifndef _CONF_OS_H_ */
+#endif /* _PORTMACRO_H_ */
