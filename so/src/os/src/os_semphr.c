@@ -21,9 +21,9 @@ extern void os_core_task_unblock(void * const task);
 extern void os_core_task_delay(const tick_t ticksToDelay);
 extern void os_core_task_yield(void);
 
-/************************
+/********************
  *	User functions	*
- ***********************/
+ *******************/
 bool os_semphr_wait(semphr_t * semphr, tick_t ticksToWait)
 {
 	bool ret = false;
@@ -76,6 +76,8 @@ void os_semphr_post(semphr_t * semphr)
 {
 	if(NULL != semphr)
 	{
+		bool yieldFlag = false;
+
 		OS_CORE_TASK_PREEMPT_DISABLE();	/* Disable preemption */
 		{
 			if(0 == semphr->value)
@@ -91,11 +93,15 @@ void os_semphr_post(semphr_t * semphr)
 					/* Unlock task blocked task */
 					os_core_task_unblock(semphr->task);
 
-					/* Invoke scheduler */
-					os_core_task_yield();
+					/* Set invoke scheduler flag */
+					yieldFlag = true;
 				}
 			}
 		}
 		OS_CORE_TASK_PREEMPT_ENABLE();	/* Enable preemption */
+
+		/* Invoke scheduler if flag set */
+		if(true == yieldFlag)
+			os_core_task_yield();
 	}
 }
