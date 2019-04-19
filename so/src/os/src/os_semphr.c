@@ -33,34 +33,37 @@ bool os_semphr_wait(semphr_t * semphr, tick_t ticksToWait)
 	{
 		OS_CORE_TASK_PREEMPT_DISABLE();	/* Disable preemption */
 		{
-			if(0 < semphr->value)
+			if(OS_SEMPHR_INVALID_TASK == semphr->task)
 			{
-				/* Semaphore is free */
-				semphr->value--;
-				ret = true;
-			}
-			else
-			{
-				/* Semaphore is busy */
-
-				/* Set current task as waiting for semaphore to be freed */
-				semphr->task = os_core_task_getCurrentContext();
-
-				OS_CORE_TASK_PREEMPT_ENABLE();	/* Enable preemption */
-
-				/* Delay for ticksToWait */
-				os_core_task_delay(ticksToWait);
-
-				OS_CORE_TASK_PREEMPT_DISABLE();	/* Disable preemption */
-
-				/* Getting here meas semaphore is free or timeout occured */
-				semphr->task = OS_SEMPHR_INVALID_TASK;
-
-				/* Is semaphore is free, take it */
 				if(0 < semphr->value)
 				{
+					/* Semaphore is free */
 					semphr->value--;
 					ret = true;
+				}
+				else
+				{
+					/* Semaphore is taken */
+
+					/* Set current task as waiting for semaphore to be freed */
+					semphr->task = os_core_task_getCurrentContext();
+
+					OS_CORE_TASK_PREEMPT_ENABLE();	/* Enable preemption */
+
+					/* Delay for ticksToWait */
+					os_core_task_delay(ticksToWait);
+
+					OS_CORE_TASK_PREEMPT_DISABLE();	/* Disable preemption */
+
+					/* Getting here means semaphore is free or timeout occured */
+					semphr->task = OS_SEMPHR_INVALID_TASK;
+
+					/* Is semaphore is free, take it */
+					if(0 < semphr->value)
+					{
+						semphr->value--;
+						ret = true;
+					}
 				}
 			}
 		}

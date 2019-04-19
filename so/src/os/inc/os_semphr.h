@@ -35,6 +35,8 @@ typedef struct
 								 };										\
 		semphr_t * name = &name##_semphr;
 
+#define OS_SEMPHR_DECLARE(name)		extern semphr_t * name;
+
 /*==================[external data declaration]==============================*/
 
 /*==================[functions declaration]==================================*/

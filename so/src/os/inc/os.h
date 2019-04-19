@@ -14,6 +14,7 @@
 /*==================[inclusions]=============================================*/
 #include <stdint.h>
 #include "portmacro.h"
+#include "conf_os.h"
 
 /* OS modules */
 #include "os_task.h"

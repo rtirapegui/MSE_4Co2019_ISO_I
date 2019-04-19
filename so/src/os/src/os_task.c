@@ -420,7 +420,7 @@ void os_core_task_unblock(void * const task)
 	OS_CORE_TASK_PREEMPT_DISABLE();
 	{
 		/* Find task in g_controlTaskArr */
-		for(uint32_t taskIndex;taskIndex < OS_TASKS_COUNT;taskIndex++)
+		for(uint32_t taskIndex = 0;taskIndex < OS_TASKS_COUNT;taskIndex++)
 		{
 			if(&g_controlTaskArr[taskIndex] == (taskControl_t *) task)
 			{
