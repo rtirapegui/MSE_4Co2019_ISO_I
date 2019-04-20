@@ -127,13 +127,13 @@ static void sendMeasurement(uint32_t sensorNo, enum sensor_t sensorTypeIndex)
 
 		// Format and send string
 		if(0 < formatVariadicString(msg, sizeof(msg), (const uint8_t *)"[%2u:%2u:%2u][INVERNADERO:%3u][%s:%u][%2u%s]\r\n", hour,
-																														  minute,
-																														  second,
-																														  rand() % GREENHOUSE_COUNT_MAX,
-																														  sensorType[sensorTypeIndex],
-																														  sensorNo,
-																														  rand() % VALUE_MAX,
-																														  unit))
+																														   minute,
+																														   second,
+																														   rand() % GREENHOUSE_COUNT_MAX,
+																														   sensorType[sensorTypeIndex],
+																														   sensorNo,
+																														   rand() % VALUE_MAX,
+																														   unit))
 		{
 			Board_UART_WriteString(msg);
 		}
@@ -142,8 +142,6 @@ static void sendMeasurement(uint32_t sensorNo, enum sensor_t sensorTypeIndex)
 		os_semphr_post(Sem_UART);
 	}
 }
-
-uint8_t buffMsg[100];
 
 /**********
  *	Tasks *
