@@ -1,0 +1,87 @@
+/*
+ ===============================================================================
+ Name        : os_queue.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include "os_queue.h"
+#include "board.h"
+
+/************************
+ *	External functions	*
+ ***********************/
+/* From module: os_task.c */
+extern void OS_CORE_TASK_PREEMPT_ENABLE(void);
+extern void OS_CORE_TASK_PREEMPT_DISABLE(void);
+extern void * os_core_task_getCurrentContext(void);
+extern void os_core_task_unblock(void * const task);
+extern void os_core_task_delay(const tick_t ticksToDelay);
+extern void os_core_task_yield(void);
+
+/*********************
+ * Private functions *
+ ********************/
+static inline uint16_t getNext(uint16_t cur_offset, uint16_t size)
+{
+   return (cur_offset == (size - 1) ? 0 : cur_offset + 1);
+}
+
+static inline uint32_t queueGetNextWrite(const queue_t * queue)
+{
+   return getNext(queue->writeItemOffset, ring->size);
+}
+
+static inline bool queueIsFull(const queue_t * queue)
+{
+   return (queue->readItemOffset == ringBufferGetNextWrite(queue));
+}
+
+/********************
+ *	User functions	*
+ *******************/
+bool os_queue_send(queue_t * queue, void * sndElement, tick_t ticksToWait)
+{
+	/* Check semaphore sanity */
+	if(NULL != queue)
+	{
+		OS_CORE_TASK_PREEMPT_DISABLE();	/* Disable preemption */
+		{
+			/**/
+		}
+		OS_CORE_TASK_PREEMPT_ENABLE();	/* Enable preemption */
+	}
+
+	while(((q->head+1)%QUEUE_LEN) == q->tail)
+		{
+			if(q->task != INVALID_TASK)
+			{
+				/* error! esta queue soporta una tarea esperando a la vez */
+				while (1) { }
+			}
+			q->task = os_get_running_task();
+			if (os_event_wait(q->ev) != 0) {
+				/* error al esperar evento */
+				while (1) { }
+			}
+			q->task = INVALID_TASK;
+		}
+
+		q->data[q->head] = d;
+
+		q->head = (q->head+1)%QUEUE_LEN;
+
+		if(q->task != INVALID_TASK)
+		{
+			if (os_event_set(q->ev) != 0) {
+				/* error al setear evento */
+				while (1) { }
+			}
+		}
+}
+bool os_queue_receive(queue_t * queue, void * rcvElement, tick_t ticksToWait)
+{
+
+}

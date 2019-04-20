@@ -19,6 +19,7 @@
 /* OS modules */
 #include "os_task.h"
 #include "os_semphr.h"
+#include "os_queue.h"
 
 /*==================[typedef]================================================*/
 

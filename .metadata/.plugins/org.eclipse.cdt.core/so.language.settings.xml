@@ -4,31 +4,7 @@
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider id="com.crt.advproject.GCCBuildCommandParser">
 				<language id="org.eclipse.cdt.core.gcc">
-					<resource project-relative-path="src/startup/cr_startup_lpc43xx.c">
-						<entry kind="includePath" name="/lpc_board_nxp_lpcxpresso_4337/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/${ProjName}/src/os/inc">
-							<flag value="VALUE_WORKSPACE_PATH"/>
-						</entry>
-						<entry kind="includePath" name="/lpc_chip_43xx/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="macro" name="CORE_M4" value=""/>
-						<entry kind="macro" name="DEBUG" value=""/>
-						<entry kind="macro" name="__CODE_RED" value=""/>
-						<entry kind="macro" name="__LPC43XX__" value=""/>
-						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
-						<entry kind="macro" name="__REDLIB__" value=""/>
-						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
-					</resource>
 					<resource project-relative-path="src/main.c">
-						<entry kind="includePath" name="/lpc_board_nxp_lpcxpresso_4337/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
 						<entry kind="includePath" name="/${ProjName}/src/os/inc">
 							<flag value="VALUE_WORKSPACE_PATH"/>
 						</entry>
@@ -37,6 +13,15 @@
 						</entry>
 						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
 						</entry>
 						<entry kind="macro" name="CORE_M4" value=""/>
 						<entry kind="macro" name="DEBUG" value=""/>
@@ -64,48 +49,36 @@
 						<entry kind="macro" name="__REDLIB__" value=""/>
 						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
 					</resource>
+					<resource project-relative-path="src/os/src/os_semphr.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
 					<resource project-relative-path="src/cr_startup_lpc43xx.c">
 						<entry kind="includePath" name="/lpc_board_nxp_lpcxpresso_4337/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/lpc_chip_43xx/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="macro" name="CORE_M4" value=""/>
-						<entry kind="macro" name="DEBUG" value=""/>
-						<entry kind="macro" name="__CODE_RED" value=""/>
-						<entry kind="macro" name="__LPC43XX__" value=""/>
-						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
-						<entry kind="macro" name="__REDLIB__" value=""/>
-						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
-					</resource>
-					<resource project-relative-path="src/so.c">
-						<entry kind="includePath" name="/lpc_board_nxp_lpcxpresso_4337/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/lpc_chip_43xx/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="macro" name="CORE_M4" value=""/>
-						<entry kind="macro" name="DEBUG" value=""/>
-						<entry kind="macro" name="__CODE_RED" value=""/>
-						<entry kind="macro" name="__LPC43XX__" value=""/>
-						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
-						<entry kind="macro" name="__REDLIB__" value=""/>
-						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
-					</resource>
-					<resource project-relative-path="src/startup/sysinit.c">
-						<entry kind="includePath" name="/lpc_board_nxp_lpcxpresso_4337/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/${ProjName}/src/os/inc">
-							<flag value="VALUE_WORKSPACE_PATH"/>
 						</entry>
 						<entry kind="includePath" name="/lpc_chip_43xx/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
@@ -139,10 +112,7 @@
 						<entry kind="macro" name="__REDLIB__" value=""/>
 						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
 					</resource>
-					<resource project-relative-path="src/startup/crp.c">
-						<entry kind="includePath" name="/lpc_board_nxp_lpcxpresso_4337/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
+					<resource project-relative-path="src/bsp/src/board_sysinit.c">
 						<entry kind="includePath" name="/${ProjName}/src/os/inc">
 							<flag value="VALUE_WORKSPACE_PATH"/>
 						</entry>
@@ -152,26 +122,14 @@
 						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
-						<entry kind="macro" name="CORE_M4" value=""/>
-						<entry kind="macro" name="DEBUG" value=""/>
-						<entry kind="macro" name="__CODE_RED" value=""/>
-						<entry kind="macro" name="__LPC43XX__" value=""/>
-						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
-						<entry kind="macro" name="__REDLIB__" value=""/>
-						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
-					</resource>
-					<resource project-relative-path="src/os/src/os.c">
-						<entry kind="includePath" name="/lpc_board_nxp_lpcxpresso_4337/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
 							<flag value="VALUE_WORKSPACE_PATH"/>
 						</entry>
-						<entry kind="includePath" name="/lpc_chip_43xx/inc">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
 						</entry>
-						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
-							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
 						</entry>
 						<entry kind="macro" name="CORE_M4" value=""/>
 						<entry kind="macro" name="DEBUG" value=""/>
@@ -190,6 +148,240 @@
 						</entry>
 						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/startup/cr_startup_lpc43xx.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/os/src/os_task.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/os/src/os_queue.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/bsp/src/board.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/so.c">
+						<entry kind="includePath" name="/lpc_board_nxp_lpcxpresso_4337/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/startup/sysinit.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/startup/crp.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/os/src/os.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="macro" name="CORE_M4" value=""/>
+						<entry kind="macro" name="DEBUG" value=""/>
+						<entry kind="macro" name="__CODE_RED" value=""/>
+						<entry kind="macro" name="__LPC43XX__" value=""/>
+						<entry kind="macro" name="__MULTICORE_NONE" value=""/>
+						<entry kind="macro" name="__REDLIB__" value=""/>
+						<entry kind="macro" name="__USE_LPCOPEN" value=""/>
+					</resource>
+					<resource project-relative-path="src/bsp/src/uart_usb.c">
+						<entry kind="includePath" name="/${ProjName}/src/os/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/lpc_chip_43xx/inc/usbd">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/bsp/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
+						<entry kind="includePath" name="/${ProjName}/src/os/inc/config">
+							<flag value="VALUE_WORKSPACE_PATH"/>
 						</entry>
 						<entry kind="macro" name="CORE_M4" value=""/>
 						<entry kind="macro" name="DEBUG" value=""/>

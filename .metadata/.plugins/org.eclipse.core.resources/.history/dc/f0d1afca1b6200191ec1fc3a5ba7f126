@@ -1,0 +1,31 @@
+/*
+ ===============================================================================
+ Name        : os_semphr.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include "os_semphr.h"
+
+/************************
+ *	External functions	*
+ ***********************/
+/* From module: os_task.c */
+extern void OS_TASK_PREEMPT_ENABLE(void);
+extern void OS_TASK_PREEMPT_DISABLE(void);
+
+/****************
+ *	Variables	*
+ ***************/
+
+/************************
+ *	User functions	*
+ ***********************/
+bool os_semphr_wait(semphr_t * semphr, uint32_t ticksToWait);
+void os_semphr_post(semphr_t * semphr);
+
+
+
+

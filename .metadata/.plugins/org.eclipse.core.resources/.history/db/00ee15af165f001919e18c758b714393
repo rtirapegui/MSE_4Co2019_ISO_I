@@ -1,0 +1,89 @@
+/*
+ ===============================================================================
+ Name        : os.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include "conf_os.h"
+#include "os.h"
+
+/****************
+ *	Variables	*
+ ***************/
+/* OS Tick counter */
+static tick_t volatile g_tickCount;
+
+/************************
+ *	External functions	*
+ ***********************/
+
+/* From module: os_task.h*/
+extern void os_task_sysTickHandler(void);
+extern void os_task_init(void);
+
+/************************
+ *	Private functions	*
+ ***********************/
+#if (OS_USE_TICK_HOOK == 1)
+    __attribute__ ((weak)) void os_tickHook(void)
+    {
+        /* DO NOTHING */
+    }
+#endif
+
+/************************
+ *	Kernel functions	*
+ ***********************/
+void SysTick_Handler(void)
+{
+	/* Invoke os_task_sysTickHandler */
+	os_task_sysTickHandler();
+
+	/* Increment OS tick counter */
+	g_tickCount++;
+
+#if (OS_USE_TICK_HOOK == 1)
+
+	/* Invoke tick hook */
+	os_tickHook();
+#endif
+}
+
+/************************
+ *	Public functions	*
+ ***********************/
+void os_start(void)
+{
+	/* Invoke os_task_init */
+	os_task_init();
+
+	/* Configure PendSV interrupt priority */
+	NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
+
+	/* Update system core clock rate */
+	SystemCoreClockUpdate();
+
+	/* Initializes the System Timer and its interrupt and
+	 * starts the System Tick Timer at user rate in milliseconds */
+	SysTick_Config((SystemCoreClock / 1000)*OS_TICK_PERIOD_MS);
+
+	while(1)
+	{
+		__WFI();
+	}
+}
+tick_t os_getTickCount(void)
+{
+	tick_t ticks;
+
+	OS_PREEMPT_DISABLE()	/* Disable preemption */
+	{
+		ticks = g_tickCount;
+	}
+	OS_PREEMPT_ENABLE()		/* Enable preemption */
+
+	return ticks;
+}

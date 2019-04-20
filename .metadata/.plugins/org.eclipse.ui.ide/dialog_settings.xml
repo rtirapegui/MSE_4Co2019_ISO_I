@@ -36,5 +36,7 @@
 		<item value="org.eclipse.wst.xml.xpath2.processor.feature:2.0.301.v201409111854"/>
 		<item value="org.eclipse.wst.xml_ui.feature:3.9.2.v201803221834"/>
 		<item value="org.eclipse.wst.xsl.feature:1.3.401.v201509231858"/>
+		<item value="org.gna.eclox.doxygen.feature:1.8.13.v20180118-1753"/>
+		<item value="org.gna.eclox.feature:0.12.1.v20180118-1753"/>
 	</list>
 </section>

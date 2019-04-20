@@ -1,0 +1,143 @@
+/*
+===============================================================================
+ Name        : board.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+
+#include "board.h"
+#include "string.h"
+
+/*************
+ * Constants *
+ *************/
+
+/* System configuration variables used by chip driver */
+const uint32_t ExtRateIn = 0;
+const uint32_t OscRateIn = 12000000;
+
+/*********
+ * Types *
+ ********/
+typedef struct
+{
+	uint8_t port;
+	uint8_t pin;
+} io_port_t;
+
+/* LED pinmap configuration */
+static const io_port_t g_LEDGPIOBits[] = {
+											{0, 14}, 	/* LED_1 	 */
+											{1, 11}, 	/* LED_2 	 */
+											{1, 12}, 	/* LED_3 	 */
+											{5, 0}, 	/* LED_RED 	 */
+											{5, 1}, 	/* LED_GREEN */
+											{5, 2}		/* LED_BLUE  */
+										 };
+
+/* BUTTON pinmap configuration */
+static const io_port_t g_BTNGPIOBits[] = {
+											{0, 4}, 	/* TEC_1 	 */
+											{0, 8}, 	/* TEC_2 	 */
+											{0, 9}, 	/* TEC_3 	 */
+											{1, 9} 		/* TEC_4 	 */
+										};
+
+/**************************
+ * LEDs control functions *
+ *************************/
+static void Board_LED_Init(void)
+{
+	uint32_t idx;
+
+	for (idx = 0; idx < (sizeof(g_LEDGPIOBits) / sizeof(io_port_t)); ++idx)
+	{
+		/* Set pin direction and init to off */
+		Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT, g_LEDGPIOBits[idx].port, g_LEDGPIOBits[idx].pin);
+		Chip_GPIO_SetPinState(LPC_GPIO_PORT, g_LEDGPIOBits[idx].port, g_LEDGPIOBits[idx].pin, (bool) false);
+	}
+}
+void Board_LED_Set(uint8_t LEDNumber, bool On)
+{
+	if (LEDNumber < (sizeof(g_LEDGPIOBits) / sizeof(io_port_t)))
+		Chip_GPIO_SetPinState(LPC_GPIO_PORT, g_LEDGPIOBits[LEDNumber].port, g_LEDGPIOBits[LEDNumber].pin, (bool) !On);
+}
+bool Board_LED_Test(uint8_t LEDNumber)
+{
+	if (LEDNumber < (sizeof(g_LEDGPIOBits) / sizeof(io_port_t)))
+		return (bool) !Chip_GPIO_GetPinState(LPC_GPIO_PORT, g_LEDGPIOBits[LEDNumber].port, g_LEDGPIOBits[LEDNumber].pin);
+
+	return false;
+}
+void Board_LED_Toggle(uint8_t LEDNumber)
+{
+   Board_LED_Set(LEDNumber, !Board_LED_Test(LEDNumber));
+}
+
+/*****************************
+ * BUTTONs control functions *
+ ****************************/
+static void Board_BUTTON_Init(void)
+{
+	uint32_t idx;
+
+	for (idx = 0; idx < (sizeof(g_BTNGPIOBits) / sizeof(io_port_t)); ++idx)
+	{
+		/* Set pin direction and init to off */
+		Chip_GPIO_SetPinDIRInput(LPC_GPIO_PORT, g_BTNGPIOBits[idx].port, g_BTNGPIOBits[idx].pin);
+	}
+}
+bool Board_BUTTON_Test(uint8_t BUTTONNumber)
+{
+	if (BUTTONNumber < (sizeof(g_BTNGPIOBits) / sizeof(io_port_t)))
+		return (bool) !Chip_GPIO_GetPinState(LPC_GPIO_PORT, g_BTNGPIOBits[LEDNumber].port, g_BTNGPIOBits[LEDNumber].pin);
+
+	return false;
+}
+
+/**************************
+ * UART control functions *
+ *************************/
+void Board_UART_Init(LPC_USART_T *pUART)
+{
+
+}
+
+/* Sends a character on the UART */
+void Board_UARTPutChar(char ch)
+{
+
+}
+
+/* Gets a character from the UART, returns EOF if no character is ready */
+int Board_UARTGetChar(void)
+{
+	return 1;
+}
+
+/* Outputs a string on the debug UART */
+void Board_UARTPutSTR(const char *str)
+{
+
+}
+
+/* Set up and initialize all required blocks
+ * and functions related to the board hardware */
+void Board_Init(void)
+{
+	/* Sets up USB UART */
+
+	/* Initializes GPIO */
+	Chip_GPIO_Init(LPC_GPIO_PORT);
+
+	/* Initialize EDU-CIAA LEDs */
+	Board_LED_Init();
+
+	/* Initialize EDU-CIAA BUTTONs */
+	Board_BUTTON_Init();
+
+	/* Initialize EDU-CIAA USB UART */
+}

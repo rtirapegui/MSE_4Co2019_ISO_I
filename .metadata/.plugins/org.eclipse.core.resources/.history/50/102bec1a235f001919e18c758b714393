@@ -1,0 +1,38 @@
+/*
+===============================================================================
+ Name        : os_semphr.h
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+
+#ifndef _OS_SEMPHR_H_
+#define _OS_SEMPHR_H_
+
+/*==================[inclusions]=============================================*/
+
+/*==================[typedef]================================================*/
+/* Semaphore definition type */
+typedef struct
+{
+	uint8_t	  value;
+	uint8_t * tasks[];
+} semphrDefinition_t;
+
+/*==================[macros]=================================================*/
+#define OS_SEMPHR_CREATE(name, length)				\
+		uint8_t blockedTasksArr[length] = { 0 };	\
+		semphrDefinition_t name##_semphr
+
+
+
+
+/*==================[external data declaration]==============================*/
+
+/*==================[external functions declaration]=========================*/
+
+/*==================[end of file]============================================*/
+
+#endif	/*	#ifndef _OS_SEMPHR_H_ */

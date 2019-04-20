@@ -1,0 +1,28 @@
+/*
+ ===============================================================================
+ Name        : os_semphr.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include "os_semphr.h"
+
+/************************
+ *	External functions	*
+ ***********************/
+/* From module: os_task.h*/
+extern void os_task_init(void);
+
+/****************
+ *	Variables	*
+ ***************/
+
+/************************
+ *	Public functions	*
+ ***********************/
+
+
+
+

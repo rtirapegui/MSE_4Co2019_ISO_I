@@ -1,0 +1,43 @@
+/*
+ ===============================================================================
+ Name        : os.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include "conf_os.h"
+#include "os.h"
+
+#include "board.h"
+
+/************************
+ *	External functions	*
+ ***********************/
+/* From module: os_task.h*/
+extern void os_task_init(void);
+
+/************************
+ *	Public functions	*
+ ***********************/
+void os_start(void)
+{
+	/* Initialize system tasks */
+	os_task_init();
+
+	/* Configure PendSV interrupt priority */
+	NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
+
+	/* Update system core clock rate */
+	SystemCoreClockUpdate();
+
+	/* Initializes the System Timer and its interrupt and
+	 * starts the System Tick Timer at user rate in milliseconds */
+	SysTick_Config((SystemCoreClock / 1000)*OS_TICK_PERIOD_MS);
+
+	while(1)
+	{
+		__WFI();
+	}
+}

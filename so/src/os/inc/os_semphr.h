@@ -22,17 +22,17 @@
 typedef struct
 {
 	uint32_t value;
-	void *	 task;
+	void *	 waitingTask;
 } semphr_t;
 
 /*==================[macros]=================================================*/
 #define OS_SEMPHR_INVALID_TASK	0
 
-#define OS_SEMPHR_CREATE(name)											\
-		semphr_t name##_semphr = {										\
-									.value = 0,							\
-									.task = OS_SEMPHR_INVALID_TASK		\
-								 };										\
+#define OS_SEMPHR_CREATE(name)														\
+		static semphr_t name##_semphr = {											\
+											.value = 0,								\
+											.waitingTask = OS_SEMPHR_INVALID_TASK	\
+								 	 	 };											\
 		semphr_t * name = &name##_semphr;
 
 #define OS_SEMPHR_DECLARE(name)		extern semphr_t * name;

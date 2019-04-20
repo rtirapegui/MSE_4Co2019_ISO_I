@@ -1,0 +1,204 @@
+/*
+ ===============================================================================
+ Name        : os.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include <string.h>
+#include <limits.h>
+#include "conf_os.h"
+#include "board.h"
+
+/****************
+ *	Variables	*
+ ***************/
+/* OS Tick counter */
+static tick_t volatile g_tickCount;
+
+/************************
+ *	Private functions	*
+ ***********************/
+#if (OS_USE_TICK_HOOK == 1)
+    __attribute__ ((weak)) void os_tickHook(void)
+    {
+        /* DO NOTHING */
+    }
+#endif
+
+/************************
+ *	Kernel functions	*
+ ***********************/
+void SysTick_Handler(void)
+{
+	/* Update Tasks blocked counter */
+	updateTasksBlockedCounter();
+
+	/* Schedule context switch */
+	schedule();
+
+	/* Increment OS tick counter */
+	g_tickCount++;
+
+#if (OS_USE_TICK_HOOK == 1)
+
+	/* Invoke tick hook */
+	os_tickHook();
+#endif
+
+}
+
+/************************
+ *	Public functions	*
+ ***********************/
+void os_start(void)
+{
+	/* Initialize Idle task control data */
+	initTaskStack(g_idleTaskStack,
+				  IDLE_TASKS_STACK_SIZE_BYTES,
+				  &g_controlTaskArr[IDLE_TASK_INDEX].sp,
+				  idleTask,
+				  IDLE_TASK_ARGUMENT);
+
+	/* Initialize user tasks control data */
+	for(uint32_t userTaskIndex = 0;userTaskIndex < OS_USER_TASKS_COUNT;userTaskIndex++)
+	{
+		uint32_t controlTaskIndex = (1 + userTaskIndex);
+
+		/* Initialize user task stack */
+		initTaskStack(g_userTaskArr[userTaskIndex]->stack,
+					  g_userTaskArr[userTaskIndex]->stackSizeBytes,
+					  &g_controlTaskArr[controlTaskIndex].sp,
+					  g_userTaskArr[userTaskIndex]->entryPoint,
+					  g_userTaskArr[userTaskIndex]->arg);
+
+		 /* Set user task state as OS_TASK_STATE_READY */
+		 g_controlTaskArr[controlTaskIndex].state = TASK_STATE_READY;
+
+		 /* Set task priority */
+		 g_controlTaskArr[controlTaskIndex].priority = g_userTaskArr[userTaskIndex]->priority;
+
+	#if DEBUG
+		g_controlTaskArr[controlTaskIndex].taskIndex = controlTaskIndex;
+	#endif
+	}
+
+	/* Initialize execution tasks list */
+	g_scheduleList = NULL;
+
+	/* Configure PendSV interrupt priority */
+	NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
+
+	/* Update system core clock rate */
+	SystemCoreClockUpdate();
+
+	/* Initializes the System Timer and its interrupt and
+	 * starts the System Tick Timer at user rate in milliseconds */
+	SysTick_Config((SystemCoreClock / 1000)*OS_TICK_PERIOD_MS);
+
+	while(1)
+	{
+		__WFI();
+	}
+}
+void os_taskDelay(const tick_t ticksToDelay)
+{
+	/* Validate ticksToDelay and current task */
+	if((0 != ticksToDelay) && (NULL != g_scheduleList))
+	{
+		OS_PREEMPT_DISABLE()	/* Disable preemption */
+		{
+			/* Set task blocked counter */
+			g_scheduleList->blockedTicks = ticksToDelay;
+
+			/* Set task state as blocked */
+			g_scheduleList->state = TASK_STATE_BLOCKED;
+		}
+		OS_PREEMPT_ENABLE()		/* Enable preemption */
+
+		/* Invoke scheduler */
+		schedule();
+	}
+}
+void os_taskDelayUntil(tick_t *const previousWakeTick, const tick_t tickIncrement)
+{
+	/* Validate previousWakeTick, tickIncrement and current task */
+	if((NULL != previousWakeTick) && (0 != tickIncrement) && (NULL != g_scheduleList))
+	{
+		bool shouldDelay = false;
+
+		/* Get current OS tick count */
+		const tick_t currTickCount = g_tickCount;
+
+		/* Calculate tick to wake */
+		tick_t tickToWake = *previousWakeTick + tickIncrement;
+
+		if(currTickCount < *previousWakeTick)
+		{
+			/* The tick count has overflowed since this function was
+			 * lasted called.  In this case the only time we should ever
+			 * actually delay is if the wake time has also	overflowed,
+			 * and the wake time is greater than the tick time.  When this
+			 * is the case it is as if neither time had overflowed. */
+			if((tickToWake < *previousWakeTick) && (tickToWake > currTickCount))
+			{
+				shouldDelay = true;
+			}
+		}
+		else
+		{
+			/* The tick time has not overflowed.  In this case we will
+			 * delay if either the wake time has overflowed, and/or the
+			 * tick time is less than the wake time. */
+			if((tickToWake < *previousWakeTick) || (tickToWake > currTickCount))
+			{
+				shouldDelay = true;
+			}
+		}
+
+		/* Update the wake tick ready for the next call. */
+		*previousWakeTick = tickToWake;
+
+		if(true == shouldDelay)
+		{
+			OS_PREEMPT_DISABLE()	/* Disable preemption */
+			{
+				tick_t ticksToDelay = ( tickToWake > currTickCount ? tickToWake - currTickCount
+																   : tickToWake - currTickCount + ((tick_t)(~0)) );
+
+				/* Set task blocked counter */
+				g_scheduleList->blockedTicks = ticksToDelay;
+
+				/* Set task state as blocked */
+				g_scheduleList->state = TASK_STATE_BLOCKED;
+			}
+			OS_PREEMPT_ENABLE()		/* Enable preemption */
+
+			/* Invoke scheduler */
+			schedule();
+		}
+	}
+}
+tick_t os_getTickCount(void)
+{
+	tick_t ticks;
+
+	OS_PREEMPT_DISABLE()	/* Disable preemption */
+	{
+		ticks = g_tickCount;
+	}
+	OS_PREEMPT_ENABLE()		/* Enable preemption */
+
+	return ticks;
+}
+void os_taskYield(void)
+{
+	/* Validate current task */
+	if(NULL != g_scheduleList)
+	{
+		/* Invoke scheduler */
+		schedule();
+	}
+}

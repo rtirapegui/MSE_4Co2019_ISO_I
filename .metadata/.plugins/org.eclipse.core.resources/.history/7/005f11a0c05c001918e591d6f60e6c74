@@ -1,0 +1,497 @@
+/*
+ ===============================================================================
+ Name        : os.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include <string.h>
+#include <limits.h>
+#include "conf_os.h"
+#include "board.h"
+
+#define DEBUG	1
+
+/****************
+ *	Constants	*
+ * *************/
+#define EXC_RETURN						0xFFFFFFF9					/* Exception return direction */
+#define OS_TASKS_COUNT				    (1 + OS_USER_TASKS_COUNT)	/* Invalid task index as total tasks count */
+#define IDLE_TASK_INDEX					0							/* Idle task is set as 0 index task. Do not change! */
+#define IDLE_TASKS_STACK_SIZE_BYTES		256							/* Idle task size in bytes */
+#define IDLE_TASK_ARGUMENT				0x00000000					/* Idle task received argument */
+
+/************
+ *	Types	*
+ ***********/
+/* Tasks states list */
+typedef enum
+{
+	TASK_STATE_READY
+,	TASK_STATE_RUNNING
+,	TASK_STATE_BLOCKED
+} taskState_t;
+
+/* Internal control struct for os tasks */
+typedef struct taskControl_t
+{
+	/* Internal data */
+	struct taskControl_t *next;
+#if DEBUG
+	uint32_t taskIndex;
+#endif
+
+	/* Task data */
+	uint32_t 		sp;
+	taskState_t		state;
+	taskPriority_t	priority;
+	uint32_t		blockedTicks;
+} taskControl_t;
+
+/****************
+ *	Variables	*
+ ***************/
+/* Stack of idle task */
+static uint32_t g_idleTaskStack[IDLE_TASKS_STACK_SIZE_BYTES/4];
+
+/* User Tasks count */
+#define OS_USER_TASKS_COUNT								\
+	(sizeof(g_userTaskArr)/sizeof(g_userTaskArr[0]))
+
+/* Tasks control array. Is idle task + user defined tasks */
+static taskControl_t g_controlTaskArr[1 + OS_USER_TASKS_COUNT] =
+		{
+			{NULL, 0, TASK_STATE_READY, TASK_PRIORITY_IDLE, 0 }
+		};
+
+/* Scheduler execution task list */
+static taskControl_t * volatile g_scheduleList;
+
+/* OS Tick counter */
+static tick_t volatile g_tickCount;
+
+/* OS enabled/disabled preemption flag */
+static bool volatile g_preemptDisabledFlag;
+
+/****************
+ *	  Macros	*
+ ***************/
+#define OS_PREEMPT_DISABLE()				\
+	do										\
+	{ 										\
+		g_preemptDisabledFlag = true;		\
+	} while(0);
+
+#define OS_PREEMT_ENABLE()					\
+	do										\
+	{ 										\
+		g_preemptDisabledFlag = false;		\
+	} while(0);
+
+/************************
+ *	Private functions	*
+ ***********************/
+#if (OS_USE_TICK_HOOK == 1)
+    __attribute__ ((weak)) void os_tickHook(void)
+    {
+        /* DO NOTHING */
+    }
+#endif
+static void returnHookTask(void *ret_val)
+{
+   while(1)
+   {
+      __WFI();
+   }
+}
+static void * idleTask(void *ret_val)
+{
+   while(1)
+   {
+      __WFI();
+   }
+
+   return NULL;
+}
+static void initTaskStack(uint32_t stack[],			/*	Pointer to RAM stack section	*/
+ 	   	  	  	  	  	  uint32_t stackSizeBytes,	/*	RAM stack section size			*/
+						  uint32_t *sp,				/*	Stack pointer					*/
+						  task_t entryPoint,		/*	Pointer to task function		*/
+						  void *arg)				/*	Pointer to task argument		*/
+{
+	memset(stack, 0, stackSizeBytes);							/*	Set stack section with zeros	*/
+	stack[stackSizeBytes/4 - 1] = 1 << 24;           			/*	xPSR, T = 1  */
+	stack[stackSizeBytes/4 - 2] = (uint32_t) entryPoint; 		/*	PC	*/
+	stack[stackSizeBytes/4 - 3] = (uint32_t) returnHookTask;  	/*	LR	*/
+	stack[stackSizeBytes/4 - 8] = (uint32_t) arg;         		/*	R0	*/
+	stack[stackSizeBytes/4 - 9] = EXC_RETURN;         			/*	LR	*/
+
+	*sp = (uint32_t) &(stack[stackSizeBytes/4 - 17]);    		/* Consider the other 8 registers	*/
+}
+static void updateTasksBlockedCounter(void)
+{
+	/* Update blocked tasks counters */
+	for(uint32_t i = 0;i < OS_TASKS_COUNT;i++)
+	{
+		if(TASK_STATE_BLOCKED == g_controlTaskArr[i].state)
+		{
+			if(g_controlTaskArr[i].blockedTicks)
+			{
+				--g_controlTaskArr[i].blockedTicks;
+
+				/* If blocked task counter equals 0, set task state to READY */
+				if(0 == g_controlTaskArr[i].blockedTicks)
+					g_controlTaskArr[i].state = TASK_STATE_READY;
+			}
+		}
+	}
+}
+static void schedule(void)
+{
+	/* Instruction Synchronization Barrier: make sure every
+	 * pending instruction in the pipeline is executed
+	 */
+	__ISB();
+
+	/* Data Synchronization Barrier: make sure every memory
+	 * access is done
+	 */
+	__DSB();
+
+	/* Activate PendSV to make context switch */
+	SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
+}
+
+/************************
+ *	Kernel functions	*
+ ***********************/
+void SysTick_Handler(void)
+{
+	/* Update Tasks blocked counter */
+	updateTasksBlockedCounter();
+
+	/* Schedule context switch */
+	schedule();
+
+	/* Increment OS tick counter */
+	g_tickCount++;
+
+#if (OS_USE_TICK_HOOK == 1)
+
+	/* Invoke tick hook */
+	os_tickHook();
+#endif
+
+}
+uint32_t os_getNextContext(uint32_t currentSp)
+{
+	/* Check if preemption is disabled and return current SP in such case */
+	if(true == g_preemptDisabledFlag)
+		return currentSp;
+
+	/* Check scheduler list status */
+	if(NULL == g_scheduleList)
+	{
+	   /* Initialize scheduler list */
+	   for(uint32_t taskIndex = 0;(taskIndex + 1) < OS_TASKS_COUNT;taskIndex++)
+	   {
+		   g_controlTaskArr[taskIndex].next = &g_controlTaskArr[taskIndex + 1];
+	   }
+
+	   /* Set head list to IDLE task */
+	   g_scheduleList = &g_controlTaskArr[IDLE_TASK_INDEX];
+	}
+	else
+	{
+	   /* Save current task context */
+	   g_scheduleList->sp = currentSp;
+
+	   /* If running, set current task state as READY */
+	   if(TASK_STATE_RUNNING == g_scheduleList->state)
+		   g_scheduleList->state = TASK_STATE_READY;
+	}
+
+	#define ORDER_NEXT_BEFORE_CURRENT_TASK	0
+	#define ORDER_NEXT_AFTER_CURRENT_TASK	1
+
+	/*****************************************************************
+	 * Next task to be executed is always the first element pointed by
+	 * g_scheduleList (head of list).
+	 *
+	 * Schedule List is reordered as follows:
+	 *
+	 * - Set a pointer to current and next task and decide if is needed
+	 * to invert their order or just leave them the way they are by
+	 * analyzing:
+	 *
+	 * - Tasks states
+	 * - Tasks priorities
+	 * - Tasks blocking counter
+	 *
+	 * Using a schedule list reduce OS footprint
+	 *****************************************************************/
+
+	uint32_t loopCnt = 0;
+	bool keepLooping = false;
+	taskControl_t *runningTask = g_scheduleList;
+
+	do
+	{
+		taskControl_t *nextSchTask = NULL;
+		taskControl_t *prevSchTask = NULL;
+
+
+		/* Reorder scheduler list */
+		for(taskControl_t *currSchTask = g_scheduleList;currSchTask;)
+		{
+			/* Set pointer to next element in list */
+			nextSchTask = currSchTask->next;
+
+			/* If there's no next element, break */
+			if(NULL == nextSchTask)
+				break;
+
+			/*******************************************************************
+			 * Decide if current and next task order should be switched or not *
+			 ******************************************************************/
+
+			/* By default leave list as it's ordered now */
+			uint8_t schTaskOrder = ORDER_NEXT_AFTER_CURRENT_TASK;
+
+			/* Evaluate states */
+			if(currSchTask->state != nextSchTask->state)
+			{	// States are different
+
+				/* If next element state is READY, switch elements position */
+				if(TASK_STATE_READY == nextSchTask->state)
+					schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
+			}
+			else
+			{	// States are equal
+				if(TASK_STATE_READY == currSchTask->state)
+				{	// States are both READY
+
+					/* Evaluate priority */
+					// Switch elements position if either:
+					// * next element priority is higher
+					// * priorities are the same and we are ordering running task (Round Robin style)
+					if( (currSchTask->priority < nextSchTask->priority)  ||
+					   ((currSchTask->priority == nextSchTask->priority) &&
+					    (currSchTask == runningTask)					 &&
+						(0 == loopCnt))
+					  )
+					{
+						schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
+					}
+				}
+				else if(TASK_STATE_BLOCKED == currSchTask->state)
+				{	// States are both BLOCKED
+
+					/* Evaluate blockedCounter */
+					if(currSchTask->blockedTicks != nextSchTask->blockedTicks)
+					{	// Block counters differ
+
+						/* If next element counter is smaller than current element, switch elements position */
+						if(currSchTask->blockedTicks > nextSchTask->blockedTicks)
+							schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
+					}
+					else
+					{	// Block counters are equal
+
+						/* Evaluate priority */
+						// Switch elements position if either:
+						// * next element priority is higher
+						// * priorities are the same and is the first loop (Round robin style)
+						if( (currSchTask->priority < nextSchTask->priority)  ||
+						   ((currSchTask->priority == nextSchTask->priority) &&
+							(0 == loopCnt))
+						  )
+						{
+						   schTaskOrder = ORDER_NEXT_BEFORE_CURRENT_TASK;
+						}
+					}
+				}
+			}
+
+			/* Reorder tasks elements */
+			if(ORDER_NEXT_BEFORE_CURRENT_TASK == schTaskOrder)
+			{
+				currSchTask->next = nextSchTask->next;
+				nextSchTask->next = currSchTask;
+
+				if(NULL != prevSchTask)
+				{
+					prevSchTask->next = nextSchTask;
+				}
+				else
+				{
+					g_scheduleList = nextSchTask;
+				}
+
+				prevSchTask = nextSchTask;
+
+				/* Tasks order was switched, so keepLooping */
+				keepLooping = true;
+			}
+			else
+			{
+				prevSchTask = currSchTask;
+				currSchTask = currSchTask->next;
+			}
+		}
+
+		/* If list order was not altered, keepLooping == false */
+	} while(keepLooping && (++loopCnt < (OS_TASKS_COUNT - 1)));
+
+	/* Return stack pointer of g_scheduleList head */
+	return g_scheduleList->sp;
+}
+
+/************************
+ *	Public functions	*
+ ***********************/
+void os_start(void)
+{
+	/* Initialize Idle task control data */
+	initTaskStack(g_idleTaskStack,
+				  IDLE_TASKS_STACK_SIZE_BYTES,
+				  &g_controlTaskArr[IDLE_TASK_INDEX].sp,
+				  idleTask,
+				  IDLE_TASK_ARGUMENT);
+
+	/* Initialize user tasks control data */
+	for(uint32_t userTaskIndex = 0;userTaskIndex < OS_USER_TASKS_COUNT;userTaskIndex++)
+	{
+		uint32_t controlTaskIndex = (1 + userTaskIndex);
+
+		/* Initialize user task stack */
+		initTaskStack(g_userTaskArr[userTaskIndex]->stack,
+					  g_userTaskArr[userTaskIndex]->stackSizeBytes,
+					  &g_controlTaskArr[controlTaskIndex].sp,
+					  g_userTaskArr[userTaskIndex]->entryPoint,
+					  g_userTaskArr[userTaskIndex]->arg);
+
+		 /* Set user task state as OS_TASK_STATE_READY */
+		 g_controlTaskArr[controlTaskIndex].state = TASK_STATE_READY;
+
+		 /* Set task priority */
+		 g_controlTaskArr[controlTaskIndex].priority = g_userTaskArr[userTaskIndex]->priority;
+
+	#if DEBUG
+		g_controlTaskArr[controlTaskIndex].taskIndex = controlTaskIndex;
+	#endif
+	}
+
+	/* Initialize execution tasks list */
+	g_scheduleList = NULL;
+
+	/* Configure PendSV interrupt priority */
+	NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
+
+	/* Update system core clock rate */
+	SystemCoreClockUpdate();
+
+	/* Initializes the System Timer and its interrupt and
+	 * starts the System Tick Timer at user rate in milliseconds */
+	SysTick_Config((SystemCoreClock / 1000)*OS_TICK_PERIOD_MS);
+
+	while(1)
+	{
+		__WFI();
+	}
+}
+void os_taskDelay(const tick_t ticksToDelay)
+{
+	/* Validate ticksToDelay and current task */
+	if((0 != ticksToDelay) && (NULL != g_scheduleList))
+	{
+		OS_PREEMPT_DISABLE();
+
+		/* Set task blocked counter */
+		g_scheduleList->blockedTicks = ticksToDelay;
+
+		/* Set task state as blocked */
+		g_scheduleList->state = TASK_STATE_BLOCKED;
+
+		OS_PREEMPT_ENABLE();
+
+		/* Invoke scheduler */
+		schedule();
+	}
+}
+void os_taskDelayUntil(tick_t *const previousWakeTick, const tick_t tickIncrement)
+{
+	/* Validate previousWakeTick, tickIncrement and current task */
+	if((NULL != previousWakeTick) && (0 != tickIncrement) && (NULL != g_scheduleList))
+	{
+		bool shouldDelay = false;
+
+		/* Get current OS tick count */
+		const tick_t currTickCount = g_tickCount;
+
+		/* Calculate tick to wake */
+		tick_t tickToWake = *previousWakeTick + tickIncrement;
+
+		if(currTickCount < *previousWakeTick)
+		{
+			/* The tick count has overflowed since this function was
+			 * lasted called.  In this case the only time we should ever
+			 * actually delay is if the wake time has also	overflowed,
+			 * and the wake time is greater than the tick time.  When this
+			 * is the case it is as if neither time had overflowed. */
+			if((tickToWake < *previousWakeTick) && (tickToWake > currTickCount))
+			{
+				shouldDelay = true;
+			}
+		}
+		else
+		{
+			/* The tick time has not overflowed.  In this case we will
+			 * delay if either the wake time has overflowed, and/or the
+			 * tick time is less than the wake time. */
+			if((tickToWake < *previousWakeTick) || (tickToWake > currTickCount))
+			{
+				shouldDelay = true;
+			}
+		}
+
+		/* Update the wake tick ready for the next call. */
+		*previousWakeTick = tickToWake;
+
+		if(true == shouldDelay)
+		{
+			tick_t ticksToDelay = ( tickToWake > currTickCount ? tickToWake - currTickCount
+															   : tickToWake - currTickCount + ((tick_t)(~0)) );
+
+			/* Set task blocked counter */
+			g_scheduleList->blockedTicks = ticksToDelay;
+
+			/* Set task state as blocked */
+			g_scheduleList->state = TASK_STATE_BLOCKED;
+
+			/* Invoke scheduler */
+			schedule();
+		}
+	}
+}
+tick_t os_getTickCount(void)
+{
+	tick_t ticks;
+
+	__asm volatile 	( " cpsid i " );	// Disable interrupts
+	ticks = g_tickCount;
+	__asm volatile 	( " cpsie i " );	// Enable interrupts
+
+	return ticks;
+}
+void os_taskYield(void)
+{
+	/* Validate current task */
+	if(NULL != g_scheduleList)
+	{
+		/* Invoke scheduler */
+		schedule();
+	}
+}

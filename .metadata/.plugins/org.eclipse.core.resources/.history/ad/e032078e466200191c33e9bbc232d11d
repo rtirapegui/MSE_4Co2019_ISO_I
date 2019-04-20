@@ -1,0 +1,26 @@
+/*
+===============================================================================
+ Name        : board.h.h
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+
+#ifndef __BOARD_H_
+#define __BOARD_H_
+
+#include "chip.h"
+
+/* Board name */
+#define BOARD_EDU_CIAA_4337
+
+/********************
+ * Public functions *
+ *******************/
+void Board_UART_Init(LPC_USART_T *pUART);
+void Board_Buttons_Init(void);
+uint32_t Buttons_GetStatus(void);
+
+#endif /* __BOARD_H_ */

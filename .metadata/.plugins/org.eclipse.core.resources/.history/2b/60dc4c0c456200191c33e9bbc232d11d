@@ -1,0 +1,43 @@
+/*
+===============================================================================
+ Name        : board.h.h
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+
+#ifndef __BOARD_H_
+#define __BOARD_H_
+
+#include "chip.h"
+
+/* Board name */
+#define BOARD_EDU_CIAA_4337
+
+/* For USBLIB examples */
+#define LEDS_LED1           0x01
+#define LEDS_LED2           0x02
+#define LEDS_LED3           0x04
+#define LEDS_LED4           0x08
+#define LEDS_NO_LEDS        0x00
+#define NO_BUTTON_PRESSED   0x00
+
+/* EDU-CIAA-NXP button defines */
+#define TEC1_PRESSED        0x01
+#define TEC2_PRESSED        0x02
+#define TEC3_PRESSED        0x04
+#define TEC4_PRESSED        0x08
+
+
+
+void Board_UART_Init(LPC_USART_T *pUART);
+
+
+void Board_Buttons_Init(void);
+
+
+uint32_t Buttons_GetStatus(void);
+
+#endif /* __BOARD_H_ */

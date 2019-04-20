@@ -1,0 +1,158 @@
+/*
+===============================================================================
+ Name        : main.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include <string.h>
+#include "board.h"
+#include "os.h"
+
+/****************
+ *	Constants	*
+ * *************/
+#define STACK_SIZE_BYTES   512
+
+/**********
+ *	Types *
+ *********/
+typedef struct
+{
+   uint8_t  tecIndex;
+   tick_t	eventTickstamp;
+   bool     eventByFallingEdge;
+} ISRQueue_data_t;
+
+typedef struct
+{
+	tick_t	pulseTickCount;
+} tasksQueue_data_t;
+
+/**********************
+ *	Application Tasks *
+ *********************/
+
+/*
+ * Example to test tasks priority scheduling
+ */
+
+OS_TASK_CREATE(Tarea_1, STACK_SIZE_BYTES, A_Task, (void *) 0x11223344, TASK_PRIORITY_IDLE + 2);
+OS_TASK_CREATE(Tarea_2, STACK_SIZE_BYTES, B_Task, (void *) 0x11223344, TASK_PRIORITY_IDLE + 1);
+
+OS_QUEUE_CREATE(ISR_Queue, 2, sizeof(ISRQueue_data_t));
+OS_QUEUE_CREATE(Task_Queue, 1, sizeof(tasksQueue_data_t));
+
+/************************
+ *	Private functions	*
+ ***********************/
+static void initHardware(void)
+{
+	// Set up and initialize all required blocks and
+    // functions related to the board hardware
+	Board_Init();
+}
+void * A_Task(void *arg)
+{
+   #define DEBOUNCE  40 // In ms
+
+   ISRQueue_data_t ISRDataElement;
+   tasksQueue_data_t tasksDataElement;
+   tick_t t0Tickstamp, t1Tickstamp, diffTicks;
+
+   while(true)
+   {
+	 if(true == os_queue_receive(ISR_Queue, &ISRDataElement, OS_TICK_MAX))
+	 {
+		if(0 == ISRDataElement.tecIndex)
+		{
+		   if(ISRDataElement.eventByFallingEdge)
+		   {
+			  t0Tickstamp = ISRDataElement.eventTickstamp;
+		   }
+		   else
+		   {
+			  t1Tickstamp = ISRDataElement.eventTickstamp;
+
+			  diffTicks = (t1Tickstamp > t0Tickstamp ? t1Tickstamp - t0Tickstamp : 0xFFFFFFFF - t0Tickstamp + t1Tickstamp);
+
+			  if(DEBOUNCE / OS_TICK_PERIOD_MS < diffTicks)
+			  {
+				  tasksDataElement.pulseTickCount = diffTicks;
+
+				  // Insert element into TasksQueue
+				  os_queue_send(Task_Queue, &tasksDataElement, 0);
+			  }
+		   }
+		}
+	 }
+   }
+
+   return NULL;
+}
+void * B_Task(void *arg)
+{
+   #define LED_ON_DIVIDER  2
+   tasksQueue_data_t tasksDataElement;
+   tick_t ledPeriodTicks = 0;
+   tick_t startPeriodTick;
+
+   while(true)
+   {
+      if(true == os_queue_receive(Task_Queue, &tasksDataElement, 0))
+	  {
+	     ledPeriodTicks = 2*tasksDataElement.pulseTickCount;
+	     startPeriodTick = os_task_getTickCount();
+	  }
+	  else
+	  {
+		if(0 != ledPeriodTicks)
+		{
+		   Board_LED_Set(LED_BLUE, true);
+		   os_task_delay(ledPeriodTicks/2);
+		   Board_LED_Set(LED_BLUE, false);
+
+		   os_task_delayUntil(&startPeriodTick, ledPeriodTicks);
+		}
+	  }
+   }
+
+   return NULL;
+}
+static void tec_1_handler(btnIRQEdge_t edge)
+{
+	ISRQueue_data_t ISRDataElement;
+
+	ISRDataElement.eventTickstamp = os_task_getTickCount();
+	ISRDataElement.tecIndex = 0;
+
+	if(FALLING_EDGE == edge)
+	{
+		ISRDataElement.eventByFallingEdge = false;
+	}
+	else
+	{
+		ISRDataElement.eventByFallingEdge = true;
+	}
+
+	// Insert element into TasksQueue
+	os_queue_send(ISR_Queue, &ISRDataElement, 0);
+}
+
+/************************
+ *	Public functions	*
+ ***********************/
+int main(void)
+{
+	/* Initialize board hardware */
+	initHardware();
+
+	/* Register button IRQ handler */
+	Board_BUTTON_registerIRQHandler(TEC_1, tec_1_handler);
+
+	/* Stay forever */
+	os_start();
+}
+

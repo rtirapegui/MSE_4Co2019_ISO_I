@@ -1,0 +1,45 @@
+/*
+ ===============================================================================
+ Name        : os.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include "conf_os.h"
+#include "os.h"
+
+#include "board.h"
+
+/****************
+ *	Variables	*
+ ***************/
+/* OS Tick counter */
+static tick_t volatile g_tickCount;
+
+/************************
+ *	External functions	*
+ ***********************/
+/* From module: os_tick.h*/
+extern void os_tick_init(void);
+
+/* From module: os_task.h*/
+extern void os_task_init(void);
+
+/************************
+ *	Public functions	*
+ ***********************/
+void os_start(void)
+{
+	/* Invoke os_task_init */
+	os_task_init();
+
+	/* Invoke os_tick_init */
+	os_tick_init();
+
+	while(1)
+	{
+		__WFI();
+	}
+}

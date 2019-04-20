@@ -1,0 +1,71 @@
+/*
+===============================================================================
+ Name        : main.c
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+#include <string.h>
+#include "board.h"
+#include "os.h"
+
+/****************
+ *	Constants	*
+ * *************/
+#define STACK_SIZE_BYTES   512
+
+/**********************
+ *	Application Tasks *
+ *********************/
+
+/*
+ * Example to test tasks priority scheduling
+ */
+
+OS_TASK_CREATE(Tarea_1, STACK_SIZE_BYTES, Task1, (void *) 0x11223344, TASK_PRIORITY_HIGH);
+OS_TASK_CREATE(Tarea_2, STACK_SIZE_BYTES, Task2, (void *) 0x11223344, TASK_PRIORITY_LOW);
+
+/************************
+ *	Private functions	*
+ ***********************/
+static void initHardware(void)
+{
+	// Set up and initialize all required blocks and
+    // functions related to the board hardware
+	Board_Init();
+}
+static void * Task1(void *arg)
+{
+   while(1)
+   {
+	   os_task_delay(15);
+      //__WFI();
+   }
+
+   return NULL;
+}
+static void * Task2(void *arg)
+{
+   while(1)
+   {
+	  os_task_delay(15);
+      //__WFI();
+   }
+
+   return NULL;
+}
+
+/************************
+ *	Public functions	*
+ ***********************/
+int main(void)
+{
+	/* Initialize board hardware */
+	initHardware();
+
+	/* Stay forever */
+	os_start();
+}
+

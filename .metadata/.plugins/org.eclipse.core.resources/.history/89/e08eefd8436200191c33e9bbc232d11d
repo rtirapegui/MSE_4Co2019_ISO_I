@@ -1,0 +1,132 @@
+/*
+===============================================================================
+ Name        : board.h.h
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+
+#ifndef __BOARD_H_
+#define __BOARD_H_
+
+#include "chip.h"
+
+/* Board name */
+#define BOARD_EDU_CIAA_4337
+
+/* For USBLIB examples */
+#define LEDS_LED1           0x01
+#define LEDS_LED2           0x02
+#define LEDS_LED3           0x04
+#define LEDS_LED4           0x08
+#define LEDS_NO_LEDS        0x00
+#define NO_BUTTON_PRESSED   0x00
+
+/* EDU-CIAA-NXP button defines */
+#define TEC1_PRESSED        0x01
+#define TEC2_PRESSED        0x02
+#define TEC3_PRESSED        0x04
+#define TEC4_PRESSED        0x08
+
+/**
+ * @brief	Sets up board specific I2C interface
+ * @param	id	: I2C Peripheral ID (I2C0, I2C1)
+ * @return	Nothing
+ */
+void Board_I2C_Init(I2C_ID_T id);
+
+/**
+ * @brief	Sets up I2C Fast Plus mode
+ * @param	id	: Must always be I2C0
+ * @return	Nothing
+ * @note	This function must be called before calling
+ *          Chip_I2C_SetClockRate() to set clock rates above
+ *          normal range 100KHz to 400KHz. Only I2C0 supports
+ *          this mode.
+ */
+STATIC INLINE void Board_I2C_EnableFastPlus(I2C_ID_T id)
+{
+	Chip_SCU_I2C0PinConfig(I2C0_FAST_MODE_PLUS);
+}
+
+/**
+ * @brief	Disable I2C Fast Plus mode and enables default mode
+ * @param	id	: Must always be I2C0
+ * @return	Nothing
+ * @sa		Board_I2C_EnableFastPlus()
+ */
+STATIC INLINE void Board_I2C_DisableFastPlus(I2C_ID_T id)
+{
+	Chip_SCU_I2C0PinConfig(I2C0_STANDARD_FAST_MODE);
+}
+
+/**
+ * @brief	Initializes board specific GPIO Interrupt
+ * @return	Nothing
+ */
+void Board_GPIO_Int_Init(void);
+
+/**
+ * @brief	Initialize pin muxing for SSP interface
+ * @param	pSSP	: Pointer to SSP interface to initialize
+ * @return	Nothing
+ */
+void Board_SSP_Init(LPC_SSP_T *pSSP);
+
+/**
+ * @brief	Returns the MAC address assigned to this board
+ * @param	mcaddr : Pointer to 6-byte character array to populate with MAC address
+ * @return	Nothing
+ */
+void Board_ENET_GetMacADDR(uint8_t *mcaddr);
+
+/**
+ * @brief	Initialize pin muxing for a UART
+ * @param	pUART	: Pointer to UART register block for UART pins to init
+ * @return	Nothing
+ */
+void Board_UART_Init(LPC_USART_T *pUART);
+
+/**
+ * @brief	Initialize pin muxing for SDMMC interface
+ * @return	Nothing
+ */
+void Board_SDMMC_Init(void);
+
+/**
+ * @brief	Initialize button(s) interface on board
+ * @return	Nothing
+ */
+void Board_Buttons_Init(void);
+
+/**
+ * @brief	Initialize joystick interface on board
+ * @return	Nothing
+ */
+void Board_Joystick_Init(void);
+
+/**
+ * @brief	Returns joystick states on board
+ * @return	Returns a JOY_* value, ir JOY_PRESS or JOY_UP
+ */
+uint8_t Joystick_GetStatus(void);
+
+/**
+ * @brief	Return button(s) state on board
+ * @return	Returns NO_BUTTON_PRESSED or TEC*_PRESSED, where *={1,2,3,4}
+ * @note
+ * Return values are ORed, so you can check if two buttons are pressed
+ * at the same time.
+ */
+uint32_t Buttons_GetStatus(void);
+
+/**
+ * @}
+ */
+
+#include "board_api.h"
+#include "lpc_phy.h"
+
+#endif /* __BOARD_H_ */

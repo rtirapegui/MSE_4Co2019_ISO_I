@@ -33,7 +33,8 @@ bool os_semphr_wait(semphr_t * semphr, tick_t ticksToWait)
 	{
 		OS_CORE_TASK_PREEMPT_DISABLE();	/* Disable preemption */
 		{
-			if(OS_SEMPHR_INVALID_TASK == semphr->task)
+			/* Just one task could be waiting the a semaphore at a time */
+			if(OS_SEMPHR_INVALID_TASK == semphr->waitingTask)
 			{
 				if(0 < semphr->value)
 				{
@@ -46,7 +47,7 @@ bool os_semphr_wait(semphr_t * semphr, tick_t ticksToWait)
 					/* Semaphore is taken */
 
 					/* Set current task as waiting for semaphore to be freed */
-					semphr->task = os_core_task_getCurrentContext();
+					semphr->waitingTask = os_core_task_getCurrentContext();
 
 					OS_CORE_TASK_PREEMPT_ENABLE();	/* Enable preemption */
 
@@ -56,7 +57,7 @@ bool os_semphr_wait(semphr_t * semphr, tick_t ticksToWait)
 					OS_CORE_TASK_PREEMPT_DISABLE();	/* Disable preemption */
 
 					/* Getting here means semaphore is free or timeout occured */
-					semphr->task = OS_SEMPHR_INVALID_TASK;
+					semphr->waitingTask = OS_SEMPHR_INVALID_TASK;
 
 					/* Is semaphore is free, take it */
 					if(0 < semphr->value)
@@ -88,10 +89,10 @@ void os_semphr_post(semphr_t * semphr)
 				semphr->value = 1;
 
 				/* Check if there's a task waiting for the semaphore to get freed */
-				if(OS_SEMPHR_INVALID_TASK != semphr->task)
+				if(OS_SEMPHR_INVALID_TASK != semphr->waitingTask)
 				{
 					/* Unlock task blocked task */
-					os_core_task_unblock(semphr->task);
+					os_core_task_unblock(semphr->waitingTask);
 
 					/* Set invoke scheduler flag */
 					yieldFlag = true;

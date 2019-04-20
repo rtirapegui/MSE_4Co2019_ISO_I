@@ -1,0 +1,14 @@
+/*
+ * portmacro.h
+ *
+ *  Created on: 18 abr. 2019
+ *      Author: MyNotebook
+ */
+
+#ifndef OS_INC_PORTMACRO_H_
+#define OS_INC_PORTMACRO_H_
+
+/* Tick type. Should be unsigned! */
+typedef uint32_t tick_t;
+
+#endif /* OS_INC_PORTMACRO_H_ */

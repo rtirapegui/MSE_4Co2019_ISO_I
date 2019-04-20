@@ -1,0 +1,18 @@
+/*
+===============================================================================
+ Name        : conf_os_task.h
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+
+#ifndef _CONF_OS_TASK_H_
+#define _CONF_OS_TASK_H_
+
+#include "os_task.h"
+
+
+
+#endif	/*	#ifndef _CONF_OS_TASK_H_ */

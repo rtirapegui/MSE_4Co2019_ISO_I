@@ -1,0 +1,34 @@
+/*
+===============================================================================
+ Name        : os.h
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+
+#ifndef _OS_H_
+#define _OS_H_
+
+/*==================[inclusions]=============================================*/
+#include <stdint.h>
+
+#include "os_semphr.h"
+#include "os_task.h"
+
+/*==================[typedef]================================================*/
+/* Tick type. Should be unsigned! */
+typedef uint32_t tick_t;
+
+/*==================[macros]=================================================*/
+
+/*==================[external data declaration]==============================*/
+
+/*==================[external functions declaration]=========================*/
+void os_start(void);
+tick_t os_getTickCount(void);
+
+/*==================[end of file]============================================*/
+
+#endif	/*	#ifndef _OS_H_ */

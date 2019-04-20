@@ -1,0 +1,38 @@
+/*
+===============================================================================
+ Name        : os_queue.h
+ Author      : $(Rodrigo Tirapegui)
+ Version     :
+ Copyright   : $(copyright)
+ Description :
+===============================================================================
+*/
+
+#ifndef _OS_QUEUE_H_
+#define _OS_QUEUE_H_
+
+/*==================[inclusions]=============================================*/
+#include <stdint.h>
+#include <stdbool.h>
+#include "portmacro.h"
+
+/*==================[typedef]================================================*/
+
+/* Queue type */
+typedef struct
+{
+
+} queue_t;
+
+/*==================[macros]=================================================*/
+
+
+/*==================[external data declaration]==============================*/
+
+/*==================[functions declaration]==================================*/
+bool os_queue_send(queue_t * queue, void *sndElement, tick_t ticksToWait);
+bool os_queue_receive(queue_t * queue, void *rcvElement, tick_t ticksToWait);
+
+/*==================[end of file]============================================*/
+
+#endif	/*	#ifndef _OS_QUEUE_H_ */

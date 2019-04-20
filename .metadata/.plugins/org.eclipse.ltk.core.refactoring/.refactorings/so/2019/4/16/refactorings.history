@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;so/src/bsp/inc/ring_buffer.h&apos; to &apos;_ring_buffer.h&apos;" description="Rename resource &apos;ring_buffer.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/bsp/inc/ring_buffer.h" name="_ring_buffer.h" stamp="1555643043236" updateReferences="true"/>
+</session>
