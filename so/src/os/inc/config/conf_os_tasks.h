@@ -23,7 +23,6 @@ extern taskDefinition_t Tarea_4[];
 extern taskDefinition_t Tarea_5[];
 extern taskDefinition_t Tarea_6[];
 extern taskDefinition_t Tarea_7[];
-extern taskDefinition_t Tarea_8[];
 
 OS_TASKS_DECLARE(Tarea_1,
 				 Tarea_2,
@@ -31,7 +30,6 @@ OS_TASKS_DECLARE(Tarea_1,
 				 Tarea_4,
 				 Tarea_5,
 				 Tarea_6,
-				 Tarea_7,
-				 Tarea_8);
+				 Tarea_7);
 
 #endif	/*	#ifndef _CONF_OS_TASKS_H_ */
