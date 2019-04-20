@@ -24,12 +24,14 @@
 /**
 * @def UART_USB_RX_BUFFER_SIZE
 * @brief Tamaño de buffer de recepcion a utilizar por la aplicacion
+* 		 Si no se recibe, la recepcion e por polling.
 */
-#define UART_USB_RX_BUFFER_SIZE  4096
+#define UART_USB_RX_BUFFER_SIZE  1024
 
 /**
 * @def UART_USB_TX_BUFFER_SIZE
-* @brief Tamaño de buffer de transmision a utilizar por la aplicacion
+* @brief Tamaño de buffer de transmision a utilizar por la aplicacion.
+* 		 Si no se define, el envio es por polling
 */
 #define UART_USB_TX_BUFFER_SIZE  1024
 

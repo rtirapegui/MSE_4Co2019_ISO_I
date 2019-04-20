@@ -32,29 +32,33 @@
 */
 static bool gInitFlag;
 
-/**
-* @var static uint8_t gRxBuff[UART_USB_RX_BUFFER_SIZE]
-* @brief Espacio de memoria a ser utilizado como buffer circular de recepcion de la UART
-*/
-static uint8_t gRxBuff[UART_USB_RX_BUFFER_SIZE];
+#ifdef UART_USB_RX_BUFFER_SIZE
+	/**
+	* @var static uint8_t gRxBuff[UART_USB_RX_BUFFER_SIZE]
+	* @brief Espacio de memoria a ser utilizado como buffer circular de recepcion de la UART
+	*/
+	static uint8_t gRxBuff[UART_USB_RX_BUFFER_SIZE];
 
-/**
-* @var static struct ring_buffer gRxBuffHandler
-* @brief Buffer circular de recepcion de la UART
-*/
-static struct ring_buffer gRxBuffHandler;
+	/**
+	* @var static struct ring_buffer gRxBuffHandler
+	* @brief Buffer circular de recepcion de la UART
+	*/
+	static struct ring_buffer gRxBuffHandler;
+#endif
 
-/**
-* @var static uint8_t gTxBuff[UART_USB_TX_BUFFER_SIZE]
-* @brief Espacio de memoria a ser utilizado como buffer circular de transmision de la UART
-*/
-static uint8_t gTxBuff[UART_USB_TX_BUFFER_SIZE];
+#ifdef UART_USB_TX_BUFFER_SIZE
+	/**
+	* @var static uint8_t gTxBuff[UART_USB_TX_BUFFER_SIZE]
+	* @brief Espacio de memoria a ser utilizado como buffer circular de transmision de la UART
+	*/
+	static uint8_t gTxBuff[UART_USB_TX_BUFFER_SIZE];
 
-/**
-* @var static struct ring_buffer gTxBuffHandler
-* @brief Buffer circular de transmision de la UART
-*/
-static struct ring_buffer  gTxBuffHandler;
+	/**
+	* @var static struct ring_buffer gTxBuffHandler
+	* @brief Buffer circular de transmision de la UART
+	*/
+	static struct ring_buffer  gTxBuffHandler;
+#endif
 
 /*==================[definiciones de datos externos]=========================*/
 
@@ -75,6 +79,7 @@ static struct ring_buffer  gTxBuffHandler;
 */
 void UART2_IRQHandler(void){
 
+#ifdef UART_USB_TX_BUFFER_SIZE
    /* Handle transmit interrupt if enabled */
    if (LPC_USART2->IER & UART_IER_THREINT) {
 
@@ -91,7 +96,9 @@ void UART2_IRQHandler(void){
             Chip_UART_IntDisable(LPC_USART2, UART_IER_THREINT);
          }
    }
+#endif
 
+#ifdef UART_USB_RX_BUFFER_SIZE
    /* Handle receive interrupt if enabled */
    if (LPC_USART2->IER & UART_IER_RBRINT) {
       if (Chip_UART_ReadLineStatus(LPC_USART2) & UART_LSR_RDR) {
@@ -104,6 +111,7 @@ void UART2_IRQHandler(void){
          }
       }
    }
+#endif
 }
 
 /** 
@@ -133,14 +141,20 @@ void uartUsbInit(void) {
    Chip_SCU_PinMux(7, 1, MD_PDN, FUNC6);                                   /* P7_1,FUNC6: UART2_TXD */
    Chip_SCU_PinMux(7, 2, MD_PLN|MD_EZI|MD_ZI, FUNC6);                      /* P7_2,FUNC6: UART2_RXD */
 
-   /* Inicializar buffer circular de recepcion */
-   gRxBuffHandler = ringBufferInit(gRxBuff, sizeof(gRxBuff));
+#if defined(UART_USB_RX_BUFFER_SIZE) || defined(UART_USB_TX_BUFFER_SIZE)
 
-   /* Inicializar buffer circular de envio */
-   gTxBuffHandler = ringBufferInit(gTxBuff, sizeof(gTxBuff));
+	#ifdef UART_USB_RX_BUFFER_SIZE
+	   /* Inicializar buffer circular de recepcion */
+	   gRxBuffHandler = ringBufferInit(gRxBuff, sizeof(gRxBuff));
 
-   //Enable UART Rx Interrupt
-   Chip_UART_IntEnable(LPC_USART2, UART_IER_RBRINT);                       /* Receiver Buffer Register Interrupt */
+	   //Enable UART Rx Interrupt
+	   Chip_UART_IntEnable(LPC_USART2, UART_IER_RBRINT);                   /* Receiver Buffer Register Interrupt */
+	#endif
+
+	#ifdef UART_USB_TX_BUFFER_SIZE
+	   /* Inicializar buffer circular de envio */
+	   gTxBuffHandler = ringBufferInit(gTxBuff, sizeof(gTxBuff));
+	#endif
 
    // Enable UART line status interrupt
    Chip_UART_IntEnable(LPC_USART2, UART_IER_RLSINT);                       /* LPC43xx User manual page 1118 */
@@ -148,6 +162,7 @@ void uartUsbInit(void) {
 
    // Enable Interrupt for UART channel
    NVIC_EnableIRQ(USART2_IRQn);
+#endif
 
    /* Marcar como inicializado el driver uart usb */
    gInitFlag = TRUE;
@@ -157,11 +172,21 @@ bool uartUsbReadByte(uint8_t* byte) {
 
    if(gInitFlag && byte) {
 
+#ifdef UART_USB_RX_BUFFER_SIZE
       if(!ringBufferIsEmpty(&gRxBuffHandler)) {
          *byte = ringBufferGet(&gRxBuffHandler);
 
          return TRUE;
       }
+#else
+
+	if (Chip_UART_ReadLineStatus(LPC_USART2) & UART_LSR_RDR)
+	{
+	  *byte = Chip_UART_ReadByte(LPC_USART2);
+
+	  return TRUE;
+	}
+#endif
    }
 
    return FALSE;
@@ -198,6 +223,7 @@ uint8_t uartUsbReadData(uint8_t* buff, const uint8_t expBytesLen, const uint32_t
 
 bool uartUsbWriteByte(const uint8_t byte) {
 
+#ifdef UART_USB_TX_BUFFER_SIZE
    /* Wait until buffer has space to insert more items */
    while(ringBufferIsFull(&gTxBuffHandler))
       ;
@@ -212,6 +238,15 @@ bool uartUsbWriteByte(const uint8_t byte) {
       /* Habilitar interrupción de transmision de la UART */
       Chip_UART_IntEnable(LPC_USART2, UART_IER_THREINT);
    }
+#else
+
+    /* Wait for space in FIFO */
+    while ((Chip_UART_ReadLineStatus(LPC_USART2) & UART_LSR_THRE) == FALSE)
+        ;
+
+    Chip_UART_SendByte(LPC_USART2, byte);
+
+#endif
 
    return TRUE;
 }
