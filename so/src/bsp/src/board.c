@@ -167,10 +167,10 @@ static void Board_BUTTON_Init(void)
 {
 	/* EDU-CIAA-NXP buttons */
 	PINMUX_GRP_T pin_config[] = {
-			{1, 0, MD_PUP|MD_EZI|FUNC0},	/* TEC1 -> P1_0 */
-			{1, 1, MD_PUP|MD_EZI|FUNC0},	/* TEC2 -> P1_1 */
-			{1, 2, MD_PUP|MD_EZI|FUNC0},	/* TEC3 -> P1_2 */
-			{1, 6, MD_PUP|MD_EZI|FUNC0} 	/* TEC4 -> P1_6 */
+			{1, 0, MD_PUP|MD_EZI|FUNC0},	/* TEC1 -> P1_0. Input glitch filter enabled. */
+			{1, 1, MD_PUP|MD_EZI|FUNC0},	/* TEC2 -> P1_1. Input glitch filter enabled. */
+			{1, 2, MD_PUP|MD_EZI|FUNC0},	/* TEC3 -> P1_2. Input glitch filter enabled. */
+			{1, 6, MD_PUP|MD_EZI|FUNC0} 	/* TEC4 -> P1_6. Input glitch filter enabled. */
 	};
 
 	Chip_SCU_SetPinMuxing(pin_config, (sizeof(pin_config) / sizeof(PINMUX_GRP_T)));

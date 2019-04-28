@@ -83,6 +83,5 @@ uint8_t uartUsbWriteString(const uint8_t* string);
 uint8_t uartUsbWriteVariadicString(const uint8_t* format, ...);
 
 /*==================[end of file]============================================*/
-
 #endif /* _uart_usb_H_ */
 

@@ -29,6 +29,12 @@
 /*==================[external data declaration]==============================*/
 
 /*==================[functions declaration]==================================*/
+/**
+ * \brief Starts the real time kernel tick processing. After calling the kernel
+ * 		  has control over which tasks are executed and when.
+ *
+ * \return void
+ */
 void os_start(void);
 
 /*==================[end of file]============================================*/
