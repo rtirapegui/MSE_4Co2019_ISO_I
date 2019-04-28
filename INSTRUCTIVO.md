@@ -1,8 +1,6 @@
-Repositorio de la materia Implementación de Sistemas Operativos I de la Maestría en Sistemas Embebidos de la FIUBA.
-
 # Descripción del programa
 
-El proyecto fue desarrollado utilizando la IDE MCUXpresso v10.3.1_2233.
+El proyecto fue desarrollado utilizando MCUXpresso IDE v10.3.1_2233.
 
 El proyecto consta de las carpetas:
 
