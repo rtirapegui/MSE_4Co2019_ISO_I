@@ -12,7 +12,7 @@
 #define _CONF_OS_H_
 
 /* OS tick hook usage */
-#define OS_USE_TICK_HOOK		1
+#define OS_USE_TICK_HOOK		0
 
 /* OS tick rate */
 #define OS_TICK_PERIOD_MS		1

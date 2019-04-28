@@ -20,6 +20,7 @@
 #include "os_task.h"
 #include "os_semphr.h"
 #include "os_queue.h"
+#include "os_vector.h"
 
 /*==================[typedef]================================================*/
 
@@ -28,6 +29,12 @@
 /*==================[external data declaration]==============================*/
 
 /*==================[functions declaration]==================================*/
+/**
+ * \brief Starts the real time kernel tick processing. After calling the kernel
+ * 		  has control over which tasks are executed and when.
+ *
+ * \return void
+ */
 void os_start(void);
 
 /*==================[end of file]============================================*/

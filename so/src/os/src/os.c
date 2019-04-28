@@ -9,8 +9,7 @@
 */
 #include "conf_os.h"
 #include "os.h"
-
-#include "board.h"
+#include "chip.h"
 
 /************************
  *	External functions	*

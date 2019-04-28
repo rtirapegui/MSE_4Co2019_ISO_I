@@ -15,23 +15,12 @@
 
 /* Declare below user tasks using OS_TASKS_DECLARE macro */
 
-// @todo.rtirapegui.8.4.2019	Buscar la manera de generar los externs desde dentro de OS_TASKS_DECLARE
-extern taskDefinition_t Tarea_1[];
-extern taskDefinition_t Tarea_2[];
-extern taskDefinition_t Tarea_3[];
-extern taskDefinition_t Tarea_4[];
-extern taskDefinition_t Tarea_5[];
-extern taskDefinition_t Tarea_6[];
-extern taskDefinition_t Tarea_7[];
-extern taskDefinition_t Tarea_8[];
+extern taskDefinition_t Processing_Task_name[];
+extern taskDefinition_t LOG_Task_name[];
+extern taskDefinition_t LED_Task_name[];
 
-OS_TASKS_DECLARE(Tarea_1,
-				 Tarea_2,
-				 Tarea_3,
-				 Tarea_4,
-				 Tarea_5,
-				 Tarea_6,
-				 Tarea_7,
-				 Tarea_8);
+OS_TASKS_DECLARE(Processing_Task_name,
+				 LOG_Task_name,
+				 LED_Task_name);
 
 #endif	/*	#ifndef _CONF_OS_TASKS_H_ */

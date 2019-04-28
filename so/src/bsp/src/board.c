@@ -8,10 +8,10 @@
 ===============================================================================
 */
 
+#include <string.h>
 #include "board.h"
-#include "string.h"
-
 #include "uart_usb.h"
+#include "os.h"
 
 /*************
  * Constants *
@@ -78,7 +78,7 @@ static btnIRQEdge_t getEdgeType(uint8_t irqChannel)
 	  /* Clear rise edge irq */
 	  Chip_PININT_ClearRiseStates(LPC_GPIO_PIN_INT,PININTCH(irqChannel));
 
-	  return RAISING_EDGE;
+	  return RISING_EDGE;
    }
    /* If not, interrupt was because a falling edge */
    else
@@ -89,7 +89,6 @@ static btnIRQEdge_t getEdgeType(uint8_t irqChannel)
 	  return FALLING_EDGE;
    }
 }
-
 static void serveIRQ(uint8_t irqChannel)
 {
 	if(NULL != g_btnIRQUserCb[irqChannel])
@@ -102,19 +101,19 @@ static void serveIRQ(uint8_t irqChannel)
 /*****************
  * IRQ functions *
  ****************/
-void GPIO0_IRQHandler(void)
+static void BOARD_TEC1_IRQHandler(void)
 {
 	serveIRQ(0);
 }
-void GPIO1_IRQHandler(void)
+static void BOARD_TEC2_IRQHandler(void)
 {
 	serveIRQ(1);
 }
-void GPIO2_IRQHandler(void)
+static void BOARD_TEC3_IRQHandler(void)
 {
 	serveIRQ(2);
 }
-void GPIO3_IRQHandler(void)
+static void BOARD_TEC4_IRQHandler(void)
 {
 	serveIRQ(3);
 }
@@ -168,10 +167,10 @@ static void Board_BUTTON_Init(void)
 {
 	/* EDU-CIAA-NXP buttons */
 	PINMUX_GRP_T pin_config[] = {
-			{1, 0, MD_PUP|MD_EZI|FUNC0},	/* TEC1 -> P1_0 */
-			{1, 1, MD_PUP|MD_EZI|FUNC0},	/* TEC2 -> P1_1 */
-			{1, 2, MD_PUP|MD_EZI|FUNC0},	/* TEC3 -> P1_2 */
-			{1, 6, MD_PUP|MD_EZI|FUNC0} 	/* TEC4 -> P1_6 */
+			{1, 0, MD_PUP|MD_EZI|FUNC0},	/* TEC1 -> P1_0. Input glitch filter enabled. */
+			{1, 1, MD_PUP|MD_EZI|FUNC0},	/* TEC2 -> P1_1. Input glitch filter enabled. */
+			{1, 2, MD_PUP|MD_EZI|FUNC0},	/* TEC3 -> P1_2. Input glitch filter enabled. */
+			{1, 6, MD_PUP|MD_EZI|FUNC0} 	/* TEC4 -> P1_6. Input glitch filter enabled. */
 	};
 
 	Chip_SCU_SetPinMuxing(pin_config, (sizeof(pin_config) / sizeof(PINMUX_GRP_T)));
@@ -187,28 +186,43 @@ static void Board_BUTTON_Init(void)
 	Chip_SCU_GPIOIntPinSel(1, 0, 8);	/* TEC_2 */
 	Chip_SCU_GPIOIntPinSel(2, 0, 9);	/* TEC_3 */
 	Chip_SCU_GPIOIntPinSel(3, 1, 9);	/* TEC_4 */
-	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH0 | PININTCH1 | PININTCH2 | PININTCH3);
-	Chip_PININT_EnableIntHigh(LPC_GPIO_PIN_INT, PININTCH0 | PININTCH1 | PININTCH2 | PININTCH3);
-	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH0 | PININTCH1 | PININTCH2 | PININTCH3);
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH0 | PININTCH1 | PININTCH2 | PININTCH3);		/* Falling edge interrupt */
+	Chip_PININT_EnableIntHigh(LPC_GPIO_PIN_INT, PININTCH0 | PININTCH1 | PININTCH2 | PININTCH3);		/* Rising edge interrupt */
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH0 | PININTCH1 | PININTCH2 | PININTCH3);	/* Configure pin as edge sentitive pin */
 
-	NVIC_ClearPendingIRQ(PIN_INT0_IRQn);
-	NVIC_ClearPendingIRQ(PIN_INT1_IRQn);
-	NVIC_ClearPendingIRQ(PIN_INT2_IRQn);
-	NVIC_ClearPendingIRQ(PIN_INT3_IRQn);
-	NVIC_EnableIRQ(PIN_INT0_IRQn);
-	NVIC_EnableIRQ(PIN_INT1_IRQn);
-	NVIC_EnableIRQ(PIN_INT2_IRQn);
-	NVIC_EnableIRQ(PIN_INT3_IRQn);
+	/* Register buttons handlers with OS API */
+	os_vector_attach_irq(PIN_INT0_IRQn, BOARD_TEC1_IRQHandler);
+	os_vector_attach_irq(PIN_INT1_IRQn, BOARD_TEC2_IRQHandler);
+	os_vector_attach_irq(PIN_INT2_IRQn, BOARD_TEC3_IRQHandler);
+	os_vector_attach_irq(PIN_INT3_IRQn, BOARD_TEC4_IRQHandler);
 }
-void Board_BUTTON_registerIRQHandler(uint8_t btnNo, btn_user_irq_handler_t cb)
+bool Board_BUTTON_registerIRQHandler(uint8_t btnNo, btn_user_irq_handler_t cb)
 {
+	bool rst = false;
+
+	/* Check if user callback is not already registered */
 	if(NULL == g_btnIRQUserCb[btnNo])
+	{
+		/* Register user callback */
 		g_btnIRQUserCb[btnNo] = cb;
+		rst = true;
+	}
+
+	return rst;
 }
-void Board_BUTTON_deregisterIRQHandler(uint8_t btnNo)
+bool Board_BUTTON_deregisterIRQHandler(uint8_t btnNo)
 {
+	bool rst = false;
+
+	/* Check if user callback is not already deregistered */
 	if(NULL != g_btnIRQUserCb[btnNo])
+	{
+		/* Deregister user callback */
 		g_btnIRQUserCb[btnNo] = NULL;
+		rst = true;
+	}
+
+	return rst;
 }
 bool Board_BUTTON_isPressed(uint8_t btnNo)
 {
