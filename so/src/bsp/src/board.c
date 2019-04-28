@@ -78,7 +78,7 @@ static btnIRQEdge_t getEdgeType(uint8_t irqChannel)
 	  /* Clear rise edge irq */
 	  Chip_PININT_ClearRiseStates(LPC_GPIO_PIN_INT,PININTCH(irqChannel));
 
-	  return RAISING_EDGE;
+	  return RISING_EDGE;
    }
    /* If not, interrupt was because a falling edge */
    else

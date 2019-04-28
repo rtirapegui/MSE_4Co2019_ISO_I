@@ -37,7 +37,7 @@
 
 typedef enum
 {
-	RAISING_EDGE
+	RISING_EDGE
 ,	FALLING_EDGE
 } btnIRQEdge_t;
 
