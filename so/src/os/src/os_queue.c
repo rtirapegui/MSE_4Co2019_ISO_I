@@ -9,7 +9,6 @@
 */
 #include <string.h>
 #include "os_queue.h"
-#include "board.h"
 
 /************************
  *	External functions	*

@@ -11,7 +11,10 @@
 #ifndef __BOARD_H_
 #define __BOARD_H_
 
+/*==================[inclusiones]============================================*/
 #include "chip.h"
+
+/*==================[macros]=================================================*/
 
 /* Board name */
 #define BOARD_EDU_CIAA_4337
@@ -31,9 +34,7 @@
 #define TEC_3		2
 #define TEC_4		3
 
-/*********
- * Types *
- ********/
+/*==================[tipos de datos]===============*/
 
 typedef enum
 {
@@ -44,14 +45,10 @@ typedef enum
 /* User Button IRQ handler */
 typedef void (*btn_user_irq_handler_t)(btnIRQEdge_t edge);
 
-/**********************
- * External functions *
- *********************/
+/*==================[declaraciones de funciones externas]====================*/
 extern void Board_SystemInit(void);
 
-/********************
- * Public functions *
- *******************/
+/*==================[declaraciones de funciones]=============================*/
 void Board_Init(void);
 
 /* LEDs control functions */
@@ -60,8 +57,8 @@ bool Board_LED_IsOn(uint8_t ledNo);
 void Board_LED_Toggle(uint8_t ledNo);
 
 /* Buttons control functions */
-void Board_BUTTON_registerIRQHandler(uint8_t btnNo, btn_user_irq_handler_t cb);
-void Board_BUTTON_deregisterIRQHandler(uint8_t btnNo);
+bool Board_BUTTON_registerIRQHandler(uint8_t btnNo, btn_user_irq_handler_t cb);
+bool Board_BUTTON_deregisterIRQHandler(uint8_t btnNo);
 bool Board_BUTTON_isPressed(uint8_t btnNo);
 uint32_t Board_BUTTON_GetStatus(void);
 

@@ -1,6 +1,6 @@
 /*
 ===============================================================================
- Name        : os.h
+ Name        : os_vector.h
  Author      : $(Rodrigo Tirapegui)
  Version     :
  Copyright   : $(copyright)
@@ -8,29 +8,26 @@
 ===============================================================================
 */
 
-#ifndef _OS_H_
-#define _OS_H_
+#ifndef _OS_VECTOR_H_
+#define _OS_VECTOR_H_
 
 /*==================[inclusions]=============================================*/
 #include <stdint.h>
-#include "portmacro.h"
-#include "conf_os.h"
-
-/* OS modules */
-#include "os_task.h"
-#include "os_semphr.h"
-#include "os_queue.h"
-#include "os_vector.h"
+#include "chip.h"
 
 /*==================[typedef]================================================*/
+
+/* User IRQ handler */
+typedef void (*user_irq_handler_t)(void);
 
 /*==================[macros]=================================================*/
 
 /*==================[external data declaration]==============================*/
 
 /*==================[functions declaration]==================================*/
-void os_start(void);
+bool os_vector_attach_irq(LPC43XX_IRQn_Type irq, user_irq_handler_t cb);
+bool os_vector_detach_irq(LPC43XX_IRQn_Type irq);
 
 /*==================[end of file]============================================*/
 
-#endif	/*	#ifndef _OS_H_ */
+#endif	/*	#ifndef _OS_VECTOR_H_ */

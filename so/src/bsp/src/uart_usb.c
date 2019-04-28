@@ -8,7 +8,6 @@
 ===============================================================================
 */
 
-/*==================[inlcusiones]============================================*/
 #include <stdarg.h>
 #include <stdio.h>
 #include "chip.h"
@@ -16,8 +15,11 @@
 #include "conf_uart_usb.h"
 #include "_ring_buffer.h"
 #include "uart_usb.h"
+#include "os.h"
 
-/*==================[definiciones y macros]==================================*/
+/*************
+ * Constants *
+ *************/
 
 /**
 * @def INACCURATE_TO_MS
@@ -25,7 +27,9 @@
 */
 #define INACCURATE_TO_MS       20400
 
-/*==================[definiciones de datos internos]=========================*/
+/**************
+ *  Variables *
+ *************/
 /**
 * @var static bool_t gInitFlag
 * @brief Indicador del estado de inicializacion del driver
@@ -60,24 +64,17 @@ static bool gInitFlag;
 	static struct ring_buffer  gTxBuffHandler;
 #endif
 
-/*==================[definiciones de datos externos]=========================*/
-
-/*==================[declaraciones de funciones internas]====================*/
-
-/*==================[declaraciones de funciones externas]====================*/
-
-/*==================[funcion principal]======================================*/
-
-/*==================[definiciones de funciones internas]=====================*/
-
+/*****************
+ * IRQ functions *
+ ****************/
 /**
-* @fn void UART2_IRQHandler(void)
+* @fn void UART_USB_IRQHandler(void)
 * @brief Manejador de interrupcion de la  UART2
 * @param Ninguno
 * @return Nada
 * @note 0x2a 0x000000A8 - Handler for ISR UART2 (IRQ 26)
 */
-void UART2_IRQHandler(void){
+void UART_USB_IRQHandler(void){
 
 #ifdef UART_USB_TX_BUFFER_SIZE
    /* Handle transmit interrupt if enabled */
@@ -114,6 +111,9 @@ void UART2_IRQHandler(void){
 #endif
 }
 
+/**********************
+ *  Private functions *
+ *********************/
 /** 
  * @fn      static void delayInaccurate(tick_t delay_ms)
  * @brief   Delay inpreciso en milisegundos
@@ -130,7 +130,9 @@ static void delayInaccurate(uint32_t delay_ms)
    for( i=delay; i>0; i-- );
 }
 
-/*==================[definiciones de funciones externas]=====================*/
+/*********************
+ *  Public functions *
+ ********************/
 void uartUsbInit(void) {
 
    /* Configurar la uart USB por interrupcion para recibir y enviar mensajes */
@@ -161,7 +163,7 @@ void uartUsbInit(void) {
    NVIC_SetPriority(USART2_IRQn, 6);
 
    // Enable Interrupt for UART channel
-   NVIC_EnableIRQ(USART2_IRQn);
+   os_vector_attach_irq(USART2_IRQn, UART_USB_IRQHandler);
 #endif
 
    /* Marcar como inicializado el driver uart usb */
@@ -325,6 +327,3 @@ uint8_t uartUsbWriteVariadicString(const uint8_t* format, ...) {
 
    return ret;
 }
-
-/*==================[fin del archivo]========================================*/
-

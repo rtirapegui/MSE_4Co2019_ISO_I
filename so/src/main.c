@@ -23,7 +23,7 @@
 /* Button defines */
 #define TEC_INDEX_0		0
 #define TEC_INDEX_1     1
-#define TEC_INVALID_1   0xFF
+#define TEC_INVALID     0xFF
 
 /* LED defines */
 #define LED_INDEX_0			LED_GREEN
@@ -359,6 +359,7 @@ static void getLEDIndexAndColor(const uint8_t firstPressTecIndex, const uint8_t 
 	uint8_t _ledIndex = LED_INDEX_INVALID;
 	uint8_t *_color = LED_COLOR_INVALID;
 
+	/* Get LED index to turn on and string indicating LED color */
 	if(TEC_INDEX_0 == firstPressTecIndex)
 	{
 		if(TEC_INDEX_0 == firstReleaseTecIndex)
@@ -490,6 +491,7 @@ static void * LOG_Task(void *arg)
 
 	while(true)
 	{
+		/* Wait until Processing task free semaphore */
 		if(true == os_semphr_wait(Processing_LOG_semphr, OS_TICK_MAX))
 		{
 			LOG_data_t LOGData = {
@@ -499,12 +501,13 @@ static void * LOG_Task(void *arg)
 									.tecRaisingEdgeIntervalMs = 0
 								 };
 
+			/* Try get access to g_LOGData */
 			if(true == os_semphr_wait(LOG_data_mutex, 0))
 			{
 				/* Save LED index and ON interval */
 				LOGData = g_LOGData;
 
-				/* Release access to g_LEDData */
+				/* Release access to g_LOGData */
 				os_semphr_post(LOG_data_mutex);
 			}
 
@@ -516,9 +519,12 @@ static void * LOG_Task(void *arg)
 				memset(msg, 0, sizeof(msg));
 
 				if(0 < formatVariadicString(msg, sizeof(msg), "%s encendido:\n\r"
-													   	   	  "\t Tiempo encendido:%u ms\n\r"
-													          "\t Tiempo entre flancos descendentes:%u ms\n\r"
-													          "\t Tiempo entre flancos ascendentes:%u ms\n\r", (const char *) LOGData.ledColor, LOGData.ledOnIntervalMs, LOGData.tecFallingEdgeIntervalMs, LOGData.tecRaisingEdgeIntervalMs))
+															  "\t Tiempo encendido: %u ms\n\r"
+															  "\t Tiempo entre flancos descendentes: %u ms\n\r"
+															  "\t Tiempo entre flancos ascendentes: %u ms\n\r", (const char *) LOGData.ledColor,
+																											   LOGData.ledOnIntervalMs,
+																											   LOGData.tecFallingEdgeIntervalMs,
+																											   LOGData.tecRaisingEdgeIntervalMs))
 				{
 					/* Send message through UART */
 					Board_UART_WriteString(msg);
@@ -533,6 +539,7 @@ static void * LED_Task(void *arg)
 {
 	while(true)
 	{
+		/* Wait until Processing task free semaphore */
 		if(true == os_semphr_wait(Processing_LED_semphr, OS_TICK_MAX))
 		{
 			LED_data_t LEDData = {
@@ -540,6 +547,7 @@ static void * LED_Task(void *arg)
 									.ledOnIntervalMs = 0
 								 };
 
+			/* Try get access to g_LEDData */
 			if(true == os_semphr_wait(LED_data_mutex, 0))
 			{
 				/* Save LED index and ON interval */
@@ -549,6 +557,7 @@ static void * LED_Task(void *arg)
 				os_semphr_post(LED_data_mutex);
 			}
 
+			/* Validate LEDData sanity */
 			if((LED_INDEX_INVALID != LEDData.ledIndex) && (0 != LEDData.ledOnIntervalMs))
 			{
 				Board_LED_Set(LEDData.ledIndex, true);
@@ -584,4 +593,3 @@ int main(void)
 	/* Stay forever */
 	os_start();
 }
-

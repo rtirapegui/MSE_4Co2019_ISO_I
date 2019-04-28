@@ -13,7 +13,7 @@
 
 #include "conf_os.h"
 #include "conf_os_tasks.h"
-#include "board.h"
+#include "chip.h"
 
 #define DEBUG	1
 
